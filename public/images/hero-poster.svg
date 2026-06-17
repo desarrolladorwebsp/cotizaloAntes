@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" role="img" aria-label="Vista previa del video promocional">
+  <rect width="1920" height="1080" fill="#F8F8F8"/>
+  <rect x="1" y="1" width="1918" height="1078" rx="24" stroke="#E5E5E5" stroke-width="2"/>
+  <defs>
+    <linearGradient id="glow" x1="960" y1="200" x2="960" y2="880" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F58220" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#F58220" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="spot" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(960 540) rotate(90) scale(420 720)">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F8F8F8"/>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#spot)"/>
+  <rect width="1920" height="1080" fill="url(#glow)"/>
+  <g opacity="0.35" stroke="#E5E5E5" stroke-width="1">
+    <line x1="0" y1="270" x2="1920" y2="270"/>
+    <line x1="0" y1="540" x2="1920" y2="540"/>
+    <line x1="0" y1="810" x2="1920" y2="810"/>
+    <line x1="480" y1="0" x2="480" y2="1080"/>
+    <line x1="960" y1="0" x2="960" y2="1080"/>
+    <line x1="1440" y1="0" x2="1440" y2="1080"/>
+  </g>
+  <circle cx="960" cy="540" r="88" fill="#FFFFFF" fill-opacity="0.9"/>
+  <circle cx="960" cy="540" r="88" stroke="#E5E5E5" stroke-width="2"/>
+  <path d="M928 500 L928 580 L1008 540 Z" fill="#F58220"/>
+</svg>

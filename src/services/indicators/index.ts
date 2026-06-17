@@ -1,0 +1,1 @@
+export { getEconomicIndicators } from "./mindicador";
