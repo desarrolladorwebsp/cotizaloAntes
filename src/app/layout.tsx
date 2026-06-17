@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { DM_Serif_Display, Inter } from "next/font/google";
 
 import { SiteFooter, SiteHeader } from "@/components/layout";
 import { Providers } from "@/components/providers";
@@ -11,6 +11,13 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+});
+
+const dmSerif = DM_Serif_Display({
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+  variable: "--font-dm-serif",
 });
 
 export const metadata: Metadata = {
@@ -84,8 +91,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es-CL" className={inter.variable} suppressHydrationWarning>
-      <body className="min-h-dvh-screen">
+    <html lang="es-CL" className={`${inter.variable} ${dmSerif.variable}`} suppressHydrationWarning>
+      <body className="min-h-dvh-screen bg-background font-sans text-foreground antialiased">
         <Providers>
           <div className="flex min-h-dvh-screen flex-col">
             <SiteHeader />

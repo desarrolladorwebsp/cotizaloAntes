@@ -20,8 +20,8 @@ export function CardAgentVisual({ isActive }: { isActive: boolean }) {
         {agents.map((agent, index) => (
           <m.div
             key={agent.name}
-            initial={{ opacity: 0, y: 10 }}
-            animate={isActive ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
+            initial={false}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: prefersReducedMotion ? 0 : 0.15 * index }}
             className={cn(
               "border-surface relative flex h-14 w-14 flex-col items-center justify-center rounded-2xl border-2 bg-gradient-to-br from-[#F8F8F8] to-[#E5E5E5] shadow-md",
@@ -34,8 +34,8 @@ export function CardAgentVisual({ isActive }: { isActive: boolean }) {
       </div>
 
       <m.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.5, y: 4 }}
+        initial={false}
+        animate={isActive ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.35 }}
         className="rounded-xl border border-border/60 bg-surface/80 px-4 py-2.5 text-center shadow-sm backdrop-blur-sm"
       >
@@ -44,8 +44,8 @@ export function CardAgentVisual({ isActive }: { isActive: boolean }) {
       </m.div>
 
       <m.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={isActive ? { opacity: 1, scale: 1 } : { opacity: 0.5, scale: 0.95 }}
+        initial={false}
+        animate={isActive ? { opacity: 1, scale: 1 } : { opacity: 1, scale: 1 }}
         transition={{ duration: 0.35, delay: 0.5 }}
         className="text-success flex items-center gap-1.5 text-[10px] font-medium"
       >

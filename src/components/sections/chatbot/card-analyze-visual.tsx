@@ -64,15 +64,19 @@ export function CardAnalyzeVisual({ isActive }: { isActive: boolean }) {
           {messages.map((message) => (
             <m.div
               key={message.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.4, y: 4 }}
+              initial={false}
+              animate={
+                isActive
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 1, y: 0 }
+              }
               transition={{ duration: 0.35, delay: message.delay }}
             >
               <ChatBubble align={message.align}>{message.text}</ChatBubble>
             </m.div>
           ))}
           {showTyping && isActive ? (
-            <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <m.div initial={false} animate={{ opacity: 1 }}>
               <TypingIndicator />
             </m.div>
           ) : null}

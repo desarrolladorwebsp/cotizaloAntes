@@ -22,8 +22,12 @@ export function CardStartVisual({ isActive }: { isActive: boolean }) {
 
       <m.div
         className="absolute bottom-2 left-4 z-20 sm:left-6"
-        initial={{ opacity: 0, scale: 0.9, y: 8 }}
-        animate={isActive ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0.6, scale: 0.95, y: 4 }}
+        initial={false}
+        animate={
+          isActive
+            ? { opacity: 1, scale: 1, y: 0 }
+            : { opacity: 1, scale: 1, y: 0 }
+        }
         transition={{ duration: 0.4, delay: 0.2 }}
       >
         <ChatBubble>Hola, quiero cotizar mi plan 👋</ChatBubble>

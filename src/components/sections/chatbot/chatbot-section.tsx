@@ -121,8 +121,8 @@ export function ChatbotSection() {
 
         <m.div
           className="mt-12 flex justify-center sm:mt-14 md:mt-16"
-          initial={{ opacity: 0, y: 12 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
+          initial={false}
+          animate={isInView ? { opacity: 1, y: 0 } : undefined}
           transition={{ ...baseTransition("slow"), delay: prefersReducedMotion ? 0 : 0.45 }}
           {...(prefersReducedMotion ? {} : hoverLift)}
         >

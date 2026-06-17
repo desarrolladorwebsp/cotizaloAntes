@@ -47,8 +47,8 @@ export function SiteFooter() {
 
       <m.div
         className="relative z-10 mx-auto w-full max-w-screen-2xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20"
-        initial={{ opacity: 0, y: 16 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
+        initial={false}
+        animate={isInView ? { opacity: 1, y: 0 } : undefined}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-12 lg:grid-cols-5 lg:gap-8 xl:gap-10">

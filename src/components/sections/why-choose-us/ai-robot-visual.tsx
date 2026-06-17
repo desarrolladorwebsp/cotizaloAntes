@@ -26,8 +26,8 @@ export function AiRobotVisual() {
       ref={ref}
       className="relative mx-auto flex w-full max-w-md items-center justify-center lg:max-w-none"
       variants={slideLeft}
-      initial={prefersReducedMotion ? false : "hidden"}
-      animate={isInView || prefersReducedMotion ? "visible" : "hidden"}
+      initial={false}
+      animate={isInView && !prefersReducedMotion ? "visible" : "visible"}
     >
       <m.div
         className="bg-primary/20 absolute h-56 w-56 rounded-full blur-3xl sm:h-72 sm:w-72"
