@@ -4,9 +4,9 @@ import { m, useInView } from "motion/react";
 import Link from "next/link";
 import { useRef } from "react";
 
-import { WhyChooseUsVideo } from "@/components/sections/why-choose-us/why-choose-us-video";
 import { BenefitCard } from "@/components/sections/why-choose-us/benefit-card";
 import { WhyChooseUsBackground } from "@/components/sections/why-choose-us/why-choose-us-background";
+import { WhyChooseUsVideo } from "@/components/sections/why-choose-us/why-choose-us-video";
 import { buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { SectionTitle } from "@/components/ui/section-title";

@@ -20,7 +20,7 @@ export function SiteLogo({ className, priority = false, asLink = true }: SiteLog
       width={logo.width}
       height={logo.height}
       priority={priority}
-      className={cn("h-8 w-auto object-contain sm:h-9", className)}
+      className={cn("h-10 w-auto object-contain sm:h-11 md:h-12", className)}
     />
   );
 

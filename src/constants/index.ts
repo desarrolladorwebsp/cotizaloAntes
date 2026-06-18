@@ -3,5 +3,7 @@ export * from "./domains";
 export * from "./footer";
 export * from "./hero";
 export * from "./navigation";
+export * from "./seo";
 export * from "./site";
+export * from "./social";
 export * from "./why-choose-us";

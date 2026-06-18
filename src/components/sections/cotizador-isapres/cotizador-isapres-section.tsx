@@ -3,8 +3,8 @@
 import { Plus, Search } from "lucide-react";
 import { useState } from "react";
 
-import { PlanResultCard } from "@/components/sections/cotizador-isapres/plan-result-card";
 import { CotizadorIsapresBackground } from "@/components/sections/cotizador-isapres/cotizador-isapres-background";
+import { PlanResultCard } from "@/components/sections/cotizador-isapres/plan-result-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
