@@ -4,7 +4,7 @@ export const siteConfig = {
   description:
     "Cotízalo Antes es el comparador y cotizador líder de Isapres, AFP y seguros en Chile. Compara planes de salud, cotiza online gratis y elige la mejor opción para ti y tu familia.",
   url: "https://cotizaloantes.cl",
-  cotizadorIsapresUrl: "https://cotizador.cotizaloantes.cl/",
+  cotizadorIsapresUrl: "https://cotizador.cotizaloantes.cl/cotizaloantes",
   ogImage: "/opengraph-image",
   logo: {
     src: "/images/logo-cotizalo-antes.png",

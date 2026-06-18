@@ -5,6 +5,7 @@ import { AnimatePresence, m } from "motion/react";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 
+import { MobileVideoModal } from "@/components/ui/mobile-video-modal";
 import { whyChooseUsConfig } from "@/constants/why-choose-us";
 import { useIsMobile, usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { baseTransition, reducedMotionConfig } from "@/lib/motion/transitions";
@@ -15,11 +16,17 @@ const { posterMobile, posterDesktop } = whyChooseUsConfig.video;
 export function WhyChooseUsVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [mobileModalOpen, setMobileModalOpen] = useState(false);
   const isMobile = useIsMobile();
   const prefersReducedMotion = usePrefersReducedMotion();
   const activePoster = isMobile ? posterMobile : posterDesktop;
 
   const handlePlay = useCallback(async () => {
+    if (isMobile) {
+      setMobileModalOpen(true);
+      return;
+    }
+
     const element = videoRef.current;
     if (!element) return;
 
@@ -29,7 +36,7 @@ export function WhyChooseUsVideo() {
     } catch {
       setIsPlaying(false);
     }
-  }, []);
+  }, [isMobile]);
 
   const motionTransition = prefersReducedMotion
     ? reducedMotionConfig.transition
@@ -62,7 +69,7 @@ export function WhyChooseUsVideo() {
         <video
           ref={videoRef}
           className={cn(
-            "absolute inset-0 h-full w-full object-cover",
+            "absolute inset-0 hidden h-full w-full object-cover md:block",
             "transition-opacity duration-500",
             isPlaying ? "opacity-100" : "opacity-0",
           )}
@@ -137,6 +144,14 @@ export function WhyChooseUsVideo() {
           ) : null}
         </AnimatePresence>
       </div>
+
+      <MobileVideoModal
+        open={mobileModalOpen}
+        onOpenChange={setMobileModalOpen}
+        src={whyChooseUsConfig.video.src}
+        poster={posterMobile}
+        ariaLabel={whyChooseUsConfig.video.ariaLabel}
+      />
     </div>
   );
 }

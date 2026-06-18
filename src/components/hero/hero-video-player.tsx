@@ -7,6 +7,7 @@ import { useCallback, useRef, useState } from "react";
 
 import { HeroCtaButton } from "@/components/hero/hero-cta-button";
 import { HeroTitle } from "@/components/hero/hero-title";
+import { MobileVideoModal } from "@/components/ui/mobile-video-modal";
 import { heroConfig } from "@/constants/hero";
 import { useIsMobile, usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { baseTransition, reducedMotionConfig } from "@/lib/motion/transitions";
@@ -18,11 +19,17 @@ const { posterMobile, posterDesktop } = heroConfig.video;
 export function HeroVideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [mobileModalOpen, setMobileModalOpen] = useState(false);
   const isMobile = useIsMobile();
   const prefersReducedMotion = usePrefersReducedMotion();
   const activePoster = isMobile ? posterMobile : posterDesktop;
 
   const handlePlay = useCallback(async () => {
+    if (isMobile) {
+      setMobileModalOpen(true);
+      return;
+    }
+
     const video = videoRef.current;
     if (!video) return;
 
@@ -32,7 +39,7 @@ export function HeroVideoPlayer() {
     } catch {
       setIsPlaying(false);
     }
-  }, []);
+  }, [isMobile]);
 
   const motionTransition = prefersReducedMotion
     ? reducedMotionConfig.transition
@@ -50,7 +57,7 @@ export function HeroVideoPlayer() {
           <video
             ref={videoRef}
             className={cn(
-              "absolute inset-0 h-full w-full object-cover",
+              "absolute inset-0 hidden h-full w-full object-cover md:block",
               "transition-opacity duration-500",
               isPlaying ? "opacity-100" : "opacity-0",
             )}
@@ -159,7 +166,7 @@ export function HeroVideoPlayer() {
               exit={{ opacity: 0, y: -8 }}
               transition={motionTransition}
               className={cn(
-                "flex justify-center border-b border-border/50 bg-background/95 px-4 py-5 backdrop-blur-md sm:py-6",
+                "hidden justify-center border-b border-border/50 bg-background/95 px-4 py-5 backdrop-blur-md sm:py-6 md:flex",
                 "shadow-[0_8px_24px_-12px_rgba(0,0,0,0.15)]",
               )}
             >
@@ -167,6 +174,14 @@ export function HeroVideoPlayer() {
             </m.div>
           ) : null}
         </AnimatePresence>
+
+        <MobileVideoModal
+          open={mobileModalOpen}
+          onOpenChange={setMobileModalOpen}
+          src={heroConfig.video.src}
+          poster={posterMobile}
+          ariaLabel={heroConfig.video.ariaLabel}
+        />
       </div>
     </LayoutGroup>
   );
