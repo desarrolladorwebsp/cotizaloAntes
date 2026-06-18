@@ -4,7 +4,7 @@ import { m, useInView } from "motion/react";
 import Link from "next/link";
 import { useRef } from "react";
 
-import { AiRobotVisual } from "@/components/sections/why-choose-us/ai-robot-visual";
+import { WhyChooseUsVideo } from "@/components/sections/why-choose-us/why-choose-us-video";
 import { BenefitCard } from "@/components/sections/why-choose-us/benefit-card";
 import { WhyChooseUsBackground } from "@/components/sections/why-choose-us/why-choose-us-background";
 import { buttonVariants } from "@/components/ui/button";
@@ -34,7 +34,7 @@ export function WhyChooseUsSection() {
       <Container size="2xl" padding="default" className="relative z-10">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20">
           <div className="order-1 flex justify-center lg:order-1 lg:justify-start">
-            <AiRobotVisual />
+            <WhyChooseUsVideo />
           </div>
 
           <m.div

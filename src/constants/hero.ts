@@ -8,8 +8,7 @@ export const heroConfig = {
     href: "/isapres",
   },
   video: {
-    // Placeholder temporal mientras se define el video final
-    src: "https://res.cloudinary.com/dtg53cua9/video/upload/v1778980879/hotel-01_dgastt.mov",
+    src: "https://media.cotizaloantes.cl/videos/vidal-01.mp4",
     poster: "/images/hero-poster.jpg",
     ariaLabel: "Video promocional de Cotízalo Antes",
   },
