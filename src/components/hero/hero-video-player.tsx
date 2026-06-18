@@ -8,16 +8,19 @@ import { useCallback, useRef, useState } from "react";
 import { HeroCtaButton } from "@/components/hero/hero-cta-button";
 import { HeroTitle } from "@/components/hero/hero-title";
 import { heroConfig } from "@/constants/hero";
-import { usePrefersReducedMotion } from "@/hooks/use-media-query";
+import { useIsMobile, usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { baseTransition, reducedMotionConfig } from "@/lib/motion/transitions";
 import { cn } from "@/lib/utils";
 
 const CTA_LAYOUT_ID = "hero-cta";
+const { posterMobile, posterDesktop } = heroConfig.video;
 
 export function HeroVideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const isMobile = useIsMobile();
   const prefersReducedMotion = usePrefersReducedMotion();
+  const activePoster = isMobile ? posterMobile : posterDesktop;
 
   const handlePlay = useCallback(async () => {
     const video = videoRef.current;
@@ -38,7 +41,12 @@ export function HeroVideoPlayer() {
   return (
     <LayoutGroup>
       <div className="w-full">
-        <div className={cn("relative aspect-video w-full overflow-hidden bg-[#0a0a0a]")}>
+        <div
+          className={cn(
+            "relative w-full overflow-hidden bg-[#0a0a0a]",
+            "aspect-[9/16] md:aspect-video",
+          )}
+        >
           <video
             ref={videoRef}
             className={cn(
@@ -47,7 +55,7 @@ export function HeroVideoPlayer() {
               isPlaying ? "opacity-100" : "opacity-0",
             )}
             src={heroConfig.video.src}
-            poster={heroConfig.video.poster}
+            poster={activePoster}
             playsInline
             controls={isPlaying}
             preload="metadata"
@@ -73,10 +81,19 @@ export function HeroVideoPlayer() {
                 transition={motionTransition}
               >
                 <Image
-                  src={heroConfig.video.poster}
+                  src={posterMobile}
                   alt=""
                   fill
-                  className="object-cover"
+                  className="object-cover md:hidden"
+                  sizes="100vw"
+                  priority
+                  aria-hidden
+                />
+                <Image
+                  src={posterDesktop}
+                  alt=""
+                  fill
+                  className="hidden object-cover md:block"
                   sizes="100vw"
                   priority
                   aria-hidden
@@ -87,19 +104,27 @@ export function HeroVideoPlayer() {
                   aria-hidden
                 />
                 <div
-                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/50"
+                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-black/45 md:via-black/10 md:to-black/35"
+                  aria-hidden
+                />
+                <div
+                  className="absolute inset-0 hidden bg-gradient-to-r from-black/55 via-black/15 to-transparent md:block"
                   aria-hidden
                 />
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center px-4 pb-24 pt-10 sm:px-8 sm:pb-28 md:pb-32">
-                  <HeroTitle className="max-w-3xl" />
+                {/* Título: móvil centrado, entre play y CTA; desktop arriba a la izquierda */}
+                <div className="absolute inset-x-0 top-[62%] z-10 -translate-y-1/2 px-5 sm:top-[63%] sm:px-8 md:translate-y-0 md:inset-x-auto md:left-32 md:right-auto md:top-[28%] md:w-[min(88%,56rem)] md:px-0 lg:left-36 xl:left-40">
+                  <HeroTitle />
+                </div>
 
+                {/* Botón play — centrado */}
+                <div className="absolute inset-0 flex items-center justify-center">
                   <m.button
                     type="button"
                     onClick={() => void handlePlay()}
                     aria-label="Reproducir video promocional"
                     className={cn(
-                      "mt-8 flex h-14 w-14 items-center justify-center rounded-full sm:mt-10 sm:h-16 sm:w-16",
+                      "relative z-10 flex h-14 w-14 items-center justify-center rounded-full sm:h-16 sm:w-16",
                       "bg-white/15 text-white backdrop-blur-md",
                       "ring-1 ring-white/30",
                       "shadow-[0_8px_32px_rgba(0,0,0,0.4)]",

@@ -6,16 +6,18 @@ import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 
 import { whyChooseUsConfig } from "@/constants/why-choose-us";
-import { usePrefersReducedMotion } from "@/hooks/use-media-query";
+import { useIsMobile, usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { baseTransition, reducedMotionConfig } from "@/lib/motion/transitions";
 import { cn } from "@/lib/utils";
 
-const { video } = whyChooseUsConfig;
+const { posterMobile, posterDesktop } = whyChooseUsConfig.video;
 
 export function WhyChooseUsVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const isMobile = useIsMobile();
   const prefersReducedMotion = usePrefersReducedMotion();
+  const activePoster = isMobile ? posterMobile : posterDesktop;
 
   const handlePlay = useCallback(async () => {
     const element = videoRef.current;
@@ -34,7 +36,7 @@ export function WhyChooseUsVideo() {
     : baseTransition("normal");
 
   return (
-    <div className="relative mx-auto flex w-full max-w-[280px] justify-center sm:max-w-[320px] lg:max-w-[360px]">
+    <div className="relative mx-auto flex w-full max-w-2xl justify-center md:max-w-[360px]">
       <m.div
         className="bg-primary/20 absolute h-48 w-48 rounded-full blur-3xl sm:h-56 sm:w-56"
         initial={false}
@@ -52,7 +54,8 @@ export function WhyChooseUsVideo() {
 
       <div
         className={cn(
-          "relative aspect-[9/16] w-full overflow-hidden",
+          "relative w-full overflow-hidden",
+          "aspect-video md:aspect-[9/16]",
           "rounded-3xl bg-[#0a0a0a] shadow-xl ring-1 ring-border/60",
         )}
       >
@@ -63,12 +66,12 @@ export function WhyChooseUsVideo() {
             "transition-opacity duration-500",
             isPlaying ? "opacity-100" : "opacity-0",
           )}
-          src={video.src}
-          poster={video.poster}
+          src={whyChooseUsConfig.video.src}
+          poster={activePoster}
           playsInline
           controls={isPlaying}
           preload="metadata"
-          aria-label={video.ariaLabel}
+          aria-label={whyChooseUsConfig.video.ariaLabel}
           onPlay={() => setIsPlaying(true)}
           onPause={() => {
             if (videoRef.current?.currentTime === 0) {
@@ -90,11 +93,19 @@ export function WhyChooseUsVideo() {
               transition={motionTransition}
             >
               <Image
-                src={video.poster}
+                src={posterMobile}
                 alt=""
                 fill
-                className="object-cover"
-                sizes="(max-width: 640px) 280px, 360px"
+                className="object-cover md:hidden"
+                sizes="(max-width: 768px) 100vw, 360px"
+                aria-hidden
+              />
+              <Image
+                src={posterDesktop}
+                alt=""
+                fill
+                className="hidden object-cover md:block"
+                sizes="360px"
                 aria-hidden
               />
 

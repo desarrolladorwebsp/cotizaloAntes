@@ -3,6 +3,7 @@ export const siteConfig = {
   description:
     "Plataforma de cotización y comparación de productos financieros y aseguradores en Chile.",
   url: "https://cotizaloantes.cl",
+  cotizadorIsapresUrl: "https://cotizador.cotizaloantes.cl/",
   ogImage: "https://cotizaloantes.cl/og-image.png",
   logo: {
     src: "/images/logo-cotizalo-antes.png",

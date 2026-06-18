@@ -1,9 +1,5 @@
-import { PageContainer } from "@/components/visual";
+import { CotizadorIsapresSection } from "@/components/sections/cotizador-isapres";
 
 export default function CotizadorPage() {
-  return (
-    <PageContainer className="items-center justify-center">
-      <p className="text-muted-foreground text-sm">Próximamente</p>
-    </PageContainer>
-  );
+  return <CotizadorIsapresSection asPage />;
 }

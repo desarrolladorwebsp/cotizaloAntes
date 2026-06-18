@@ -1,4 +1,3 @@
-export * from "./chatbot";
 export * from "./config";
 export * from "./domains";
 export * from "./footer";

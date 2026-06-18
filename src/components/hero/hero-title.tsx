@@ -1,4 +1,9 @@
+"use client";
+
+import { m } from "motion/react";
+
 import { heroConfig } from "@/constants/hero";
+import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 type HeroTitleProps = {
@@ -6,36 +11,30 @@ type HeroTitleProps = {
 };
 
 export function HeroTitle({ className }: HeroTitleProps) {
-  const { eyebrow, headline } = heroConfig.title;
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const { prefix, highlight } = heroConfig.title;
 
   return (
-    <h1
-      id="hero-title"
-      className={cn("relative z-10 flex flex-col items-center text-center", className)}
+    <m.div
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
+      className={cn("relative z-10 w-full", className)}
     >
-      <span
+      <h1
+        id="hero-title"
         className={cn(
-          "text-white/85 mb-2 text-[0.6875rem] font-semibold tracking-[0.28em] uppercase sm:mb-3 sm:text-xs",
-          "drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]",
+          "hero-title font-extrabold tracking-tight text-balance antialiased",
+          "text-center md:text-left",
+          "text-[clamp(1.75rem,6.8vw,2.5rem)] leading-[1.1]",
+          "md:max-w-[min(95%,58rem)] md:text-[clamp(3.25rem,7.2vw,6.25rem)] md:leading-[1.02]",
+          "hero-title-shadow",
         )}
       >
-        {eyebrow}
-      </span>
-
-      <span className="relative inline-block">
-        <span
-          className={cn(
-            "font-display text-[2.75rem] leading-[0.95] font-normal tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[4.5rem]",
-            "drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]",
-          )}
-        >
-          {headline}
-        </span>
-        <span
-          className="from-primary via-primary to-primary/40 absolute -bottom-1 left-1/2 h-1 w-[min(100%,12rem)] -translate-x-1/2 rounded-full bg-gradient-to-r sm:-bottom-1.5 sm:h-1.5"
-          aria-hidden
-        />
-      </span>
-    </h1>
+        <span className="text-white">{prefix}</span>
+        <br className="md:hidden" aria-hidden />
+        <span className="hero-title-highlight md:mt-1.5 md:text-[1.04em]">{highlight}</span>
+      </h1>
+    </m.div>
   );
 }

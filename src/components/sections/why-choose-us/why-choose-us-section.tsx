@@ -9,6 +9,7 @@ import { BenefitCard } from "@/components/sections/why-choose-us/benefit-card";
 import { WhyChooseUsBackground } from "@/components/sections/why-choose-us/why-choose-us-background";
 import { buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+import { SectionTitle } from "@/components/ui/section-title";
 import { whyChooseUsConfig } from "@/constants/why-choose-us";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { hoverLift, staggerChildren, staggerContainer } from "@/lib/motion";
@@ -33,23 +34,18 @@ export function WhyChooseUsSection() {
 
       <Container size="2xl" padding="default" className="relative z-10">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20">
-          <div className="order-1 flex justify-center lg:order-1 lg:justify-start">
-            <WhyChooseUsVideo />
-          </div>
-
           <m.div
-            className="order-2 flex flex-col gap-3 sm:gap-4 lg:order-2"
+            className="order-1 flex flex-col gap-3 sm:gap-4"
             variants={staggerContainer}
             initial={false}
             animate={isInView && !prefersReducedMotion ? "visible" : false}
           >
             <m.header variants={staggerChildren} transition={baseTransition("slow")} className="mb-5 space-y-3 sm:mb-7">
-              <h2
+              <SectionTitle
                 id="why-choose-us-title"
-                className="text-foreground text-3xl font-semibold tracking-tight text-balance sm:text-4xl lg:text-[2.5rem] lg:leading-tight"
-              >
-                {title}
-              </h2>
+                prefix={title.prefix}
+                highlight={title.highlight}
+              />
               <p className="text-muted-foreground max-w-xl text-base leading-relaxed sm:text-lg">
                 {subtitle}
               </p>
@@ -99,6 +95,16 @@ export function WhyChooseUsSection() {
                 </Link>
               </m.div>
             </m.div>
+          </m.div>
+
+          <m.div
+            className="order-2 flex justify-center lg:sticky lg:top-24 lg:justify-end lg:self-start"
+            variants={staggerChildren}
+            initial={false}
+            animate={isInView && !prefersReducedMotion ? "visible" : false}
+            transition={{ ...baseTransition("slow"), delay: prefersReducedMotion ? 0 : 0.35 }}
+          >
+            <WhyChooseUsVideo />
           </m.div>
         </div>
       </Container>

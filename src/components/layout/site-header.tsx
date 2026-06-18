@@ -20,6 +20,10 @@ import { cn } from "@/lib/utils";
 
 import { SiteLogo } from "./site-logo";
 
+function isExternalHref(href: string): boolean {
+  return href.startsWith("http://") || href.startsWith("https://");
+}
+
 function NavLink({
   href,
   label,
@@ -33,19 +37,33 @@ function NavLink({
   onClick?: () => void;
   className?: string;
 }) {
+  const linkClassName = cn(
+    "rounded-lg px-2.5 py-2 text-xs font-medium transition-colors duration-200 xl:px-3 xl:text-sm",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    isActive
+      ? "bg-primary/10 text-primary"
+      : "text-muted-foreground hover:bg-accent hover:text-foreground",
+    className,
+  );
+
+  if (isExternalHref(href)) {
+    return (
+      <a
+        href={href}
+        onClick={onClick}
+        className={linkClassName}
+      >
+        {label}
+      </a>
+    );
+  }
+
   return (
     <Link
       href={href}
       onClick={onClick}
       aria-current={isActive ? "page" : undefined}
-      className={cn(
-        "rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-        isActive
-          ? "bg-primary/10 text-primary"
-          : "text-muted-foreground hover:bg-accent hover:text-foreground",
-        className,
-      )}
+      className={linkClassName}
     >
       {label}
     </Link>
@@ -56,10 +74,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname.startsWith(href);
-  };
+  const isActive = (href: string) => pathname === href;
 
   return (
     <header className="safe-area-top sticky top-0 z-[var(--z-header)] w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
@@ -67,7 +82,7 @@ export function SiteHeader() {
         <div className="flex h-14 items-center justify-between gap-4 sm:h-16">
           <SiteLogo priority />
 
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Navegación principal">
+          <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Navegación principal">
             {mainNavigation.map((item) => (
               <NavLink
                 key={item.href}
@@ -79,12 +94,12 @@ export function SiteHeader() {
           </nav>
 
           <Drawer open={mobileOpen} onOpenChange={setMobileOpen}>
-            <DrawerTrigger asChild className="md:hidden">
+            <DrawerTrigger asChild className="lg:hidden">
               <Button variant="ghost" size="icon" aria-label="Abrir menú de navegación">
                 <Menu className="h-5 w-5" />
               </Button>
             </DrawerTrigger>
-            <DrawerContent className="md:hidden">
+            <DrawerContent className="lg:hidden">
               <DrawerHeader className="border-b border-border pb-4 text-left">
                 <DrawerTitle className="sr-only">Menú de navegación</DrawerTitle>
                 <SiteLogo asLink={false} className="h-9" />

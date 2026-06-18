@@ -1,7 +1,7 @@
 export const mainNavigation = [
-  { label: "Inicio", href: "/" },
-  { label: "Cotizador Tradicional", href: "/cotizador" },
-  { label: "Chatbot", href: "/chatbot" },
+  { label: "Cotizador Isapres", href: "/cotizador" },
+  { label: "Cotizador AFP", href: "/cotizador/afp" },
+  { label: "Cotizador seguros", href: "/cotizador/seguros" },
   { label: "Nosotros", href: "/nosotros" },
 ] as const;
 

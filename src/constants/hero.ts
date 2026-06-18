@@ -1,15 +1,18 @@
+import { siteConfig } from "@/constants/site";
+
 export const heroConfig = {
   title: {
-    eyebrow: "Compara antes de",
-    headline: "decidir.",
+    prefix: "Compara antes de",
+    highlight: "decidir.",
   },
   cta: {
     label: "Cotizar Isapres",
-    href: "/isapres",
+    href: siteConfig.cotizadorIsapresUrl,
   },
   video: {
     src: "https://media.cotizaloantes.cl/videos/vidal-01.mp4",
-    poster: "/images/hero-poster.jpg",
+    posterMobile: "/images/hero-poster-vertical.png",
+    posterDesktop: "/images/hero-poster-horizontal.jpg",
     ariaLabel: "Video promocional de Cotízalo Antes",
   },
 } as const;
