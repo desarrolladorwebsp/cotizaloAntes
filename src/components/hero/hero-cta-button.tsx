@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { buttonVariants } from "@/components/ui/button";
 import { heroConfig } from "@/constants/hero";
+import { buildGenericCotizadorUrl } from "@/lib/cotizador";
 import { cn } from "@/lib/utils";
 
 type HeroCtaButtonProps = {
@@ -15,7 +16,7 @@ type HeroCtaButtonProps = {
 export function HeroCtaButton({ layoutId, className }: HeroCtaButtonProps) {
   const link = (
     <Link
-      href={heroConfig.cta.href}
+      href={buildGenericCotizadorUrl()}
       className={buttonVariants({
         variant: "premium",
         size: "lg",

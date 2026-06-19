@@ -1,5 +1,3 @@
-import { siteConfig } from "@/constants/site";
-
 export const heroConfig = {
   title: {
     prefix: "Compara antes de",
@@ -7,7 +5,6 @@ export const heroConfig = {
   },
   cta: {
     label: "Cotizar Isapres",
-    href: siteConfig.cotizadorIsapresUrl,
   },
   video: {
     src: "https://media.cotizaloantes.cl/videos/vidal-01.mp4",
