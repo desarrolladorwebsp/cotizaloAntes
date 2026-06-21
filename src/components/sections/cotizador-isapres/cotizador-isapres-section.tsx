@@ -40,9 +40,11 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
   const [gender, setGender] = useState<string>(genders[0]);
   const [income, setIncome] = useState("");
   const [age, setAge] = useState("");
+  const [email, setEmail] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [dependantAges, setDependantAges] = useState<string[]>([]);
   const [formError, setFormError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAddDependant = () => {
     setDependantAges((current) => [...current, ""]);
@@ -56,9 +58,15 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
     setDependantAges((current) => current.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormError(null);
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      setFormError("Ingresa un correo electrónico válido.");
+      return;
+    }
 
     const parsedAge = parseInt(age, 10);
     if (!Number.isFinite(parsedAge) || parsedAge < 0 || parsedAge > 120) {
@@ -79,7 +87,7 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
       .filter((filter) => filter.checked && !filter.disabled)
       .map((filter) => filter.id);
 
-    window.location.href = buildCotizadorUrl({
+    const cotizadorUrl = buildCotizadorUrl({
       region,
       edad: parsedAge,
       sexo: gender,
@@ -91,6 +99,39 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
       moneda: currency === "uf" ? "uf" : "clp",
       ...(selectedIsapres.length > 0 ? { isapres: selectedIsapres } : {}),
     });
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/cotizacion-notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: trimmedEmail,
+          region,
+          edad: parsedAge,
+          sexo: gender,
+          ingreso: income.trim() || undefined,
+          cargas: cargas.length > 0 ? cargas : undefined,
+          cotizadorUrl,
+        }),
+      });
+
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(payload?.error ?? "No se pudieron enviar las notificaciones.");
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      setFormError(
+        error instanceof Error
+          ? error.message
+          : "No se pudieron enviar las notificaciones por correo. Intenta nuevamente.",
+      );
+      return;
+    }
+
+    window.location.href = cotizadorUrl;
   };
 
   return (
@@ -117,6 +158,24 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
             onSubmit={handleSubmit}
             className="rounded-2xl border border-border/70 bg-surface p-4 shadow-sm sm:p-5"
           >
+            <div className="mb-4 space-y-1.5">
+              <Label htmlFor="email">Correo electrónico</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                placeholder="tu@correo.cl"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
+              />
+              <p className="text-muted-foreground text-xs">
+                Te enviaremos un resumen de tu cotización y te redirigiremos al cotizador.
+              </p>
+            </div>
+
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1fr_88px_120px_auto_auto] lg:items-end">
               <div className="space-y-1.5">
                 <Label htmlFor="region">Región</Label>
@@ -190,9 +249,10 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
 
               <Button
                 type="submit"
+                disabled={isSubmitting}
                 className="h-11 rounded-full px-6 text-sm font-semibold shadow-glow lg:col-span-1"
               >
-                Buscar mejor plan
+                {isSubmitting ? "Enviando..." : "Buscar mejor plan"}
               </Button>
             </div>
 
