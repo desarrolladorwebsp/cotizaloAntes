@@ -35,15 +35,7 @@ function CoverageBlock({
   );
 }
 
-export function PlanResultCard({
-  plan,
-  onSolicitar,
-  isSubmitting = false,
-}: {
-  plan: CotizadorPlan;
-  onSolicitar?: (plan: CotizadorPlan) => void;
-  isSubmitting?: boolean;
-}) {
+export function PlanResultCard({ plan }: { plan: CotizadorPlan }) {
   return (
     <article className="rounded-2xl border border-border/70 bg-surface p-4 shadow-sm sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -79,14 +71,8 @@ export function PlanResultCard({
               <FileText className="h-3.5 w-3.5" aria-hidden />
               PDF
             </Button>
-            <Button
-              type="button"
-              size="sm"
-              className="h-9 px-4 text-xs font-semibold"
-              disabled={isSubmitting}
-              onClick={() => onSolicitar?.(plan)}
-            >
-              {isSubmitting ? "Enviando..." : "Solicitar"}
+            <Button type="button" size="sm" className="h-9 px-4 text-xs font-semibold">
+              Solicitar
             </Button>
           </div>
         </div>
