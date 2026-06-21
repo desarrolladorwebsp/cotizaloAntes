@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { CotizadorPlan } from "@/constants/cotizador-isapres";
 import { cotizadorIsapresConfig } from "@/constants/cotizador-isapres";
 import { buildCotizadorUrl, mapSortToOrden } from "@/lib/cotizador";
 import { cn } from "@/lib/utils";
@@ -44,34 +45,50 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
   const [searchQuery, setSearchQuery] = useState("");
   const [dependantAges, setDependantAges] = useState<string[]>([]);
   const [formError, setFormError] = useState<string | null>(null);
+  const [formSuccess, setFormSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittingPlanId, setSubmittingPlanId] = useState<string | null>(null);
+  const [isapreSelection, setIsapreSelection] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(isapreFilters.map((filter) => [filter.id, filter.checked])),
+  );
 
-  const handleAddDependant = () => {
-    setDependantAges((current) => [...current, ""]);
-  };
+  const getSelectedIsapres = () =>
+    isapreFilters
+      .filter((filter) => isapreSelection[filter.id] && !filter.disabled)
+      .map((filter) => filter.label);
 
-  const handleDependantChange = (index: number, value: string) => {
-    setDependantAges((current) => current.map((item, i) => (i === index ? value : item)));
-  };
+  type FormValidationResult =
+    | {
+        error:
+          | "Ingresa un correo electrónico válido."
+          | "Ingresa una edad válida entre 0 y 120 años."
+          | "Revisa las edades de los asegurados adicionales.";
+      }
+    | {
+        payload: {
+          email: string;
+          region: string;
+          edad: number;
+          sexo: string;
+          ingreso?: string;
+          cargas?: number[];
+          busqueda?: string;
+          orden?: string;
+          moneda?: "clp" | "uf";
+          isapres?: string[];
+          cotizadorUrl: string;
+        };
+      };
 
-  const handleRemoveDependant = (index: number) => {
-    setDependantAges((current) => current.filter((_, i) => i !== index));
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setFormError(null);
-
+  const validateFormData = (): FormValidationResult => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-      setFormError("Ingresa un correo electrónico válido.");
-      return;
+      return { error: "Ingresa un correo electrónico válido." as const };
     }
 
     const parsedAge = parseInt(age, 10);
     if (!Number.isFinite(parsedAge) || parsedAge < 0 || parsedAge > 120) {
-      setFormError("Ingresa una edad válida entre 0 y 120 años.");
-      return;
+      return { error: "Ingresa una edad válida entre 0 y 120 años." as const };
     }
 
     const cargas = dependantAges
@@ -79,13 +96,10 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
       .filter((value) => Number.isFinite(value) && value >= 0 && value <= 120);
 
     if (dependantAges.some((value) => value.trim() !== "") && cargas.length !== dependantAges.length) {
-      setFormError("Revisa las edades de los asegurados adicionales.");
-      return;
+      return { error: "Revisa las edades de los asegurados adicionales." as const };
     }
 
-    const selectedIsapres = isapreFilters
-      .filter((filter) => filter.checked && !filter.disabled)
-      .map((filter) => filter.id);
+    const selectedIsapres = getSelectedIsapres();
 
     const cotizadorUrl = buildCotizadorUrl({
       region,
@@ -97,30 +111,79 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
       q: searchQuery.trim() || undefined,
       orden: mapSortToOrden(sortBy),
       moneda: currency === "uf" ? "uf" : "clp",
-      ...(selectedIsapres.length > 0 ? { isapres: selectedIsapres } : {}),
+      ...(selectedIsapres.length > 0
+        ? { isapres: isapreFilters.filter((filter) => isapreSelection[filter.id] && !filter.disabled).map((filter) => filter.id) }
+        : {}),
     });
+
+    return {
+      payload: {
+        email: trimmedEmail,
+        region,
+        edad: parsedAge,
+        sexo: gender,
+        ingreso: income.trim() || undefined,
+        cargas: cargas.length > 0 ? cargas : undefined,
+        busqueda: searchQuery.trim() || undefined,
+        orden: sortBy,
+        moneda: currency === "uf" ? ("uf" as const) : ("clp" as const),
+        isapres: selectedIsapres.length > 0 ? selectedIsapres : undefined,
+        cotizadorUrl,
+      },
+    };
+  };
+
+  const sendNotification = async (
+    payload: {
+      email: string;
+      region: string;
+      edad: number;
+      sexo: string;
+      ingreso?: string;
+      cargas?: number[];
+      busqueda?: string;
+      orden?: string;
+      moneda?: "clp" | "uf";
+      isapres?: string[];
+      plan?: {
+        codigo: string;
+        id?: string;
+        isapre?: string;
+        precioUf?: string;
+        precioClp?: string;
+        coberturaHospitalaria?: number;
+        coberturaAmbulatoria?: number;
+      };
+      cotizadorUrl: string;
+    },
+  ) => {
+    const response = await fetch("/api/cotizacion-notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorPayload = (await response.json().catch(() => null)) as { error?: string } | null;
+      throw new Error(errorPayload?.error ?? "No se pudieron enviar las notificaciones.");
+    }
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFormError(null);
+    setFormSuccess(null);
+
+    const validation = validateFormData();
+    if ("error" in validation) {
+      setFormError(validation.error);
+      return;
+    }
 
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/cotizacion-notify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: trimmedEmail,
-          region,
-          edad: parsedAge,
-          sexo: gender,
-          ingreso: income.trim() || undefined,
-          cargas: cargas.length > 0 ? cargas : undefined,
-          cotizadorUrl,
-        }),
-      });
-
-      if (!response.ok) {
-        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-        throw new Error(payload?.error ?? "No se pudieron enviar las notificaciones.");
-      }
+      await sendNotification(validation.payload);
     } catch (error) {
       setIsSubmitting(false);
       setFormError(
@@ -131,7 +194,57 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
       return;
     }
 
-    window.location.href = cotizadorUrl;
+    window.location.href = validation.payload.cotizadorUrl;
+  };
+
+  const handleSolicitarPlan = async (plan: CotizadorPlan) => {
+    setFormError(null);
+    setFormSuccess(null);
+
+    const validation = validateFormData();
+    if ("error" in validation) {
+      setFormError(validation.error);
+      return;
+    }
+
+    setSubmittingPlanId(plan.id);
+
+    try {
+      await sendNotification({
+        ...validation.payload,
+        busqueda: validation.payload.busqueda ?? plan.code,
+        plan: {
+          codigo: plan.code,
+          id: plan.id,
+          isapre: plan.provider,
+          precioUf: plan.priceUf,
+          precioClp: plan.priceClp,
+          coberturaHospitalaria: plan.hospitalCoverage,
+          coberturaAmbulatoria: plan.ambulatoryCoverage,
+        },
+      });
+      setFormSuccess(`Solicitud enviada para el plan ${plan.code}. Revisa tu correo y te contactaremos pronto.`);
+    } catch (error) {
+      setFormError(
+        error instanceof Error
+          ? error.message
+          : "No se pudieron enviar las notificaciones por correo. Intenta nuevamente.",
+      );
+    } finally {
+      setSubmittingPlanId(null);
+    }
+  };
+
+  const handleAddDependant = () => {
+    setDependantAges((current) => [...current, ""]);
+  };
+
+  const handleDependantChange = (index: number, value: string) => {
+    setDependantAges((current) => current.map((item, i) => (i === index ? value : item)));
+  };
+
+  const handleRemoveDependant = (index: number) => {
+    setDependantAges((current) => current.filter((_, i) => i !== index));
   };
 
   return (
@@ -295,6 +408,12 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
                 {formError}
               </p>
             ) : null}
+
+            {formSuccess ? (
+              <p className="text-primary mt-4 text-sm" role="status">
+                {formSuccess}
+              </p>
+            ) : null}
           </form>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -398,8 +517,14 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
                       >
                         <input
                           type="checkbox"
-                          defaultChecked={filter.checked}
+                          checked={isapreSelection[filter.id] ?? false}
                           disabled={filter.disabled}
+                          onChange={(event) =>
+                            setIsapreSelection((current) => ({
+                              ...current,
+                              [filter.id]: event.target.checked,
+                            }))
+                          }
                           className="accent-primary h-4 w-4 rounded border-border"
                         />
                         {filter.label}
@@ -412,7 +537,12 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
 
             <div className="space-y-4">
               {plans.map((plan) => (
-                <PlanResultCard key={plan.id} plan={plan} />
+                <PlanResultCard
+                  key={plan.id}
+                  plan={plan}
+                  onSolicitar={handleSolicitarPlan}
+                  isSubmitting={submittingPlanId === plan.id}
+                />
               ))}
             </div>
           </div>
