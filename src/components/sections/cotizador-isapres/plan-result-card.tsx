@@ -1,7 +1,9 @@
 import { FileText } from "lucide-react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import type { CotizadorPlan } from "@/constants/cotizador-isapres";
+import { getIsapreLogo } from "@/constants/isapre-logos";
 import { cn } from "@/lib/utils";
 
 function CoverageBlock({
@@ -36,13 +38,27 @@ function CoverageBlock({
 }
 
 export function PlanResultCard({ plan }: { plan: CotizadorPlan }) {
+  const logoSrc = getIsapreLogo(plan.provider);
+
   return (
     <article className="rounded-2xl border border-border/70 bg-surface p-4 shadow-sm sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex min-w-0 flex-1 items-start gap-3">
-          <div className="bg-destructive/10 text-destructive flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-[10px] font-bold">
-            {plan.provider.slice(0, 2).toUpperCase()}
-          </div>
+          {logoSrc ? (
+            <div className="border-border/60 bg-background flex h-12 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border px-2 py-1.5 sm:w-28">
+              <Image
+                src={logoSrc}
+                alt={`Logo ${plan.provider}`}
+                width={112}
+                height={48}
+                className="h-full w-full object-contain object-center"
+              />
+            </div>
+          ) : (
+            <div className="bg-destructive/10 text-destructive flex h-12 w-24 shrink-0 items-center justify-center rounded-xl text-[10px] font-bold sm:w-28">
+              {plan.provider.slice(0, 2).toUpperCase()}
+            </div>
+          )}
           <div className="min-w-0 space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="text-foreground text-sm font-semibold sm:text-base">{plan.code}</h3>

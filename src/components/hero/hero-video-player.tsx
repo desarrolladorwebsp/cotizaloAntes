@@ -3,7 +3,7 @@
 import { Play } from "lucide-react";
 import { AnimatePresence, LayoutGroup, m } from "motion/react";
 import Image from "next/image";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { HeroCtaButton } from "@/components/hero/hero-cta-button";
 import { HeroTitle } from "@/components/hero/hero-title";
@@ -41,6 +41,36 @@ export function HeroVideoPlayer() {
     }
   }, [isMobile]);
 
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    let cancelled = false;
+
+    const tryAutoplay = async () => {
+      if (cancelled) return;
+
+      try {
+        await video.play();
+        if (!cancelled) setIsPlaying(true);
+      } catch {
+        if (!cancelled) setIsPlaying(false);
+      }
+    };
+
+    if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
+      void tryAutoplay();
+    } else {
+      video.addEventListener("canplay", () => void tryAutoplay(), { once: true });
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [prefersReducedMotion]);
+
   const motionTransition = prefersReducedMotion
     ? reducedMotionConfig.transition
     : baseTransition("normal");
@@ -57,15 +87,18 @@ export function HeroVideoPlayer() {
           <video
             ref={videoRef}
             className={cn(
-              "absolute inset-0 hidden h-full w-full object-cover md:block",
+              "absolute inset-0 h-full w-full object-cover",
               "transition-opacity duration-500",
               isPlaying ? "opacity-100" : "opacity-0",
             )}
             src={heroConfig.video.src}
             poster={activePoster}
+            autoPlay
+            muted
+            loop
             playsInline
-            controls={isPlaying}
-            preload="metadata"
+            controls={isPlaying && !isMobile}
+            preload="auto"
             aria-label={heroConfig.video.ariaLabel}
             onPlay={() => setIsPlaying(true)}
             onPause={() => {
@@ -73,7 +106,11 @@ export function HeroVideoPlayer() {
                 setIsPlaying(false);
               }
             }}
-            onEnded={() => setIsPlaying(false)}
+            onEnded={() => {
+              if (!videoRef.current?.loop) {
+                setIsPlaying(false);
+              }
+            }}
             onError={() => setIsPlaying(false)}
           />
 
