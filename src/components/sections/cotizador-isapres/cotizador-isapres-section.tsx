@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cotizadorIsapresConfig } from "@/constants/cotizador-isapres";
+import type { CotizadorPlan } from "@/constants/cotizador-isapres";
 import { buildCotizadorUrl, mapSortToOrden } from "@/lib/cotizador";
 import { cn } from "@/lib/utils";
 
@@ -59,14 +60,10 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
     setDependantAges((current) => current.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setFormError(null);
-
+  const validateForm = (): string | null => {
     const parsedAge = parseInt(age, 10);
     if (!Number.isFinite(parsedAge) || parsedAge < 0 || parsedAge > 120) {
-      setFormError("Ingresa una edad válida entre 0 y 120 años.");
-      return;
+      return "Ingresa una edad válida entre 0 y 120 años.";
     }
 
     const cargas = dependantAges
@@ -74,26 +71,72 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
       .filter((value) => Number.isFinite(value) && value >= 0 && value <= 120);
 
     if (dependantAges.some((value) => value.trim() !== "") && cargas.length !== dependantAges.length) {
-      setFormError("Revisa las edades de los asegurados adicionales.");
-      return;
+      return "Revisa las edades de los asegurados adicionales.";
     }
+
+    return null;
+  };
+
+  const buildFormCotizadorUrl = (options?: { plan?: CotizadorPlan }) => {
+    const parsedAge = parseInt(age, 10);
+    const cargas = dependantAges
+      .map((value) => parseInt(value, 10))
+      .filter((value) => Number.isFinite(value) && value >= 0 && value <= 120);
 
     const selectedIsapres = isapreFilters
       .filter((filter) => isapreSelection[filter.id] && !filter.disabled)
       .map((filter) => filter.id);
 
-    window.location.href = buildCotizadorUrl({
+    const plan = options?.plan;
+    const planIsapreId = plan
+      ? isapreFilters.find((filter) => filter.label === plan.provider)?.id
+      : undefined;
+
+    const isapres =
+      planIsapreId && !selectedIsapres.includes(planIsapreId)
+        ? [...selectedIsapres, planIsapreId]
+        : selectedIsapres;
+
+    const searchTerm = searchQuery.trim();
+    const q = plan?.code ?? (searchTerm || undefined);
+
+    return buildCotizadorUrl({
       region,
       edad: parsedAge,
       sexo: gender,
       ingreso: income.trim() || undefined,
       cargas: cargas.length > 0 ? cargas : undefined,
       auto: true,
-      q: searchQuery.trim() || undefined,
+      q,
       orden: mapSortToOrden(sortBy),
       moneda: currency === "uf" ? "uf" : "clp",
-      ...(selectedIsapres.length > 0 ? { isapres: selectedIsapres } : {}),
+      ...(isapres.length > 0 ? { isapres } : {}),
     });
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFormError(null);
+
+    const validationError = validateForm();
+    if (validationError) {
+      setFormError(validationError);
+      return;
+    }
+
+    window.location.href = buildFormCotizadorUrl();
+  };
+
+  const handleSolicitarPlan = (plan: CotizadorPlan) => {
+    setFormError(null);
+
+    const validationError = validateForm();
+    if (validationError) {
+      setFormError(validationError);
+      return;
+    }
+
+    window.location.href = buildFormCotizadorUrl({ plan });
   };
 
   return (
@@ -361,7 +404,7 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
 
             <div className="space-y-4">
               {plans.map((plan) => (
-                <PlanResultCard key={plan.id} plan={plan} />
+                <PlanResultCard key={plan.id} plan={plan} onSolicitar={handleSolicitarPlan} />
               ))}
             </div>
           </div>

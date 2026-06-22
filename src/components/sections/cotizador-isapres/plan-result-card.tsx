@@ -37,7 +37,13 @@ function CoverageBlock({
   );
 }
 
-export function PlanResultCard({ plan }: { plan: CotizadorPlan }) {
+export function PlanResultCard({
+  plan,
+  onSolicitar,
+}: {
+  plan: CotizadorPlan;
+  onSolicitar?: (plan: CotizadorPlan) => void;
+}) {
   const logoSrc = getIsapreLogo(plan.provider);
 
   return (
@@ -87,7 +93,12 @@ export function PlanResultCard({ plan }: { plan: CotizadorPlan }) {
               <FileText className="h-3.5 w-3.5" aria-hidden />
               PDF
             </Button>
-            <Button type="button" size="sm" className="h-9 px-4 text-xs font-semibold">
+            <Button
+              type="button"
+              size="sm"
+              className="h-9 px-4 text-xs font-semibold"
+              onClick={() => onSolicitar?.(plan)}
+            >
               Solicitar
             </Button>
           </div>
