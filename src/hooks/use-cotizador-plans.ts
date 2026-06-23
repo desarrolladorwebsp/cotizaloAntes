@@ -2,10 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { cotizadorIsapresConfig } from "@/constants/cotizador-isapres";
+import { type cotizadorIsapresConfig } from "@/constants/cotizador-isapres";
 import {
-  mapPreviewPlanToCotizadorPlan,
   type ApiHealthPlanSummary,
+  mapPreviewPlanToCotizadorPlan,
 } from "@/lib/cotizador/plan-mapper";
 import type { CotizadorPlan } from "@/types/cotizador-plan";
 

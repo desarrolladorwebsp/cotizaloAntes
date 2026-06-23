@@ -23,12 +23,12 @@ import { cotizadorUi } from "@/constants/cotizador-ui";
 import { useCotizadorPlans } from "@/hooks/use-cotizador-plans";
 import { useEconomicIndicators } from "@/hooks/use-economic-indicators";
 import { buildCotizadorUrl, mapSortToOrden } from "@/lib/cotizador";
+import { cn } from "@/lib/utils";
 import {
   getSolicitarCriteriaValidationMessage,
   validateSearchCriteria,
 } from "@/lib/validation/solicitar-criteria";
 import type { CotizadorPlan } from "@/types/cotizador-plan";
-import { cn } from "@/lib/utils";
 
 const {
   sectionId,

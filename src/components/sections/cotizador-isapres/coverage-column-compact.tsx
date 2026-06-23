@@ -1,7 +1,6 @@
 import { formatCoveragePercentages } from "@/lib/cotizador/plan-mapper";
-import type { CoverageProvider } from "@/types/cotizador-plan";
-import { cotizadorUi } from "@/constants/cotizador-ui";
 import { cn } from "@/lib/utils";
+import type { CoverageProvider } from "@/types/cotizador-plan";
 
 function resolveMaxPercentage(
   entries: CoverageProvider[],

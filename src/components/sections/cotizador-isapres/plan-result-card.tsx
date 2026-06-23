@@ -5,8 +5,8 @@ import type { ReactNode } from "react";
 import { CoverageColumnCompact } from "@/components/sections/cotizador-isapres/coverage-column-compact";
 import { cotizadorUi } from "@/constants/cotizador-ui";
 import { getIsapreLogo } from "@/constants/isapre-logos";
-import type { CotizadorPlan } from "@/types/cotizador-plan";
 import { cn } from "@/lib/utils";
+import type { CotizadorPlan } from "@/types/cotizador-plan";
 
 function PlanActionButton({
   label,
