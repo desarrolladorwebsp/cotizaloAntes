@@ -20,13 +20,21 @@ export function formatIndicatorDate(isoDate: string): string {
 }
 
 async function fetchEconomicIndicators(): Promise<EconomicIndicators> {
-  const response = await fetch("/api/indicators");
+  const response = await fetch("/api/indicators", {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
     throw new Error("No se pudieron obtener los indicadores");
   }
 
-  return response.json() as Promise<EconomicIndicators>;
+  const data = (await response.json()) as EconomicIndicators;
+
+  if (data.uf === null && data.utm === null && data.dolar === null) {
+    throw new Error("Indicadores económicos no disponibles");
+  }
+
+  return data;
 }
 
 export { fetchEconomicIndicators };

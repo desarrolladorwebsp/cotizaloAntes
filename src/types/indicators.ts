@@ -9,6 +9,21 @@ export interface MindicadorResponse {
   serie: MindicadorSerie[];
 }
 
+export interface MindicadorBulkIndicator {
+  codigo: string;
+  nombre: string;
+  unidad_medida: string;
+  fecha: string;
+  valor: number;
+}
+
+export interface MindicadorBulkResponse {
+  fecha: string;
+  uf: MindicadorBulkIndicator;
+  utm: MindicadorBulkIndicator;
+  dolar: MindicadorBulkIndicator;
+}
+
 export interface EconomicIndicators {
   uf: number | null;
   utm: number | null;

@@ -40,7 +40,7 @@ function IndicatorValue({ value, isLoading }: { value: number | null; isLoading:
 }
 
 export function FooterIndicators() {
-  const { data, isLoading, isFetching } = useEconomicIndicators();
+  const { data, isLoading, isFetching, isError, refetch } = useEconomicIndicators();
 
   return (
     <FooterColumn title="Indicadores económicos">
@@ -61,10 +61,21 @@ export function FooterIndicators() {
         ))}
       </ul>
       <p className="text-footer-muted/80 text-xs leading-relaxed">
-        {data?.updatedAt
-          ? `Actualizado: ${formatIndicatorDate(data.updatedAt)}`
-          : "Actualización automática cada 10 min"}
+        {isError
+          ? "No se pudieron cargar los indicadores. Se reintentará automáticamente."
+          : data?.updatedAt
+            ? `Actualizado: ${formatIndicatorDate(data.updatedAt)}`
+            : "Actualización automática cada 10 min"}
       </p>
+      {isError ? (
+        <button
+          type="button"
+          onClick={() => void refetch()}
+          className="text-primary mt-2 text-xs font-medium hover:underline"
+        >
+          Reintentar ahora
+        </button>
+      ) : null}
     </FooterColumn>
   );
 }
