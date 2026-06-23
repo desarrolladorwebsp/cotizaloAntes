@@ -77,6 +77,7 @@ export function buildSolicitarFallbackUrl(data: SolicitarUrlRequest): string {
   params.set("region", body.region);
   params.set("edad", String(body.edad));
   params.set("sexo", body.sexo);
+  params.set("q", body.plan);
 
   if (body.ingreso) {
     params.set("ingreso", body.ingreso);
