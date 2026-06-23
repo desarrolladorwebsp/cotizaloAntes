@@ -1,0 +1,23 @@
+/*
+ * Tokens de marca del cotizador virtual (cotizador.cotizaloantes.cl)
+ * Fuente: [data-brand=cotizalo-antes] en el cotizador y /api/public/v1/docs
+ */
+[data-cotizador-brand] {
+  --cot-primary: #ed7d11;
+  --cot-primary-hover: #f59324;
+  --cot-primary-dark: #92450a;
+  --cot-primary-foreground: #ffffff;
+  --cot-secondary: #0e7c9c;
+  --cot-secondary-muted: #eef6f8;
+  --cot-bg-layout: #ffffff;
+  --cot-foreground: #1a1a1a;
+  --cot-muted: #6b7280;
+  --cot-border: #e5e7eb;
+  --cot-surface-hover: #f4f4f5;
+  --cot-shadow-card: 0 4px 24px -8px #0000000f;
+  --cot-shadow-card-hover: 0 12px 32px -10px #0000001a;
+  --cot-shadow-cta: 0 8px 24px -8px #ed7d1166;
+  --cot-criteria-surface: #ffffff;
+  --cot-criteria-ring: #e5e7eb;
+  color: var(--cot-foreground);
+}

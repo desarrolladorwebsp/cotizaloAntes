@@ -16,3 +16,8 @@ export {
   REGION_LABEL_TO_CODE,
   sanitizeIngreso,
 } from "./build-cotizador-url";
+export type { SolicitarUrlRequest } from "./solicitar-url";
+export {
+  buildSolicitarApiBody,
+  buildSolicitarFallbackUrl,
+} from "./solicitar-url";

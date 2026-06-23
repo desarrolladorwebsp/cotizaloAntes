@@ -1,16 +1,16 @@
 "use client";
 
-import { Plus, Search, X } from "lucide-react";
-import { type FormEvent, useState } from "react";
+import { Plus, X } from "lucide-react";
+import { type FormEvent, useRef, useState } from "react";
 
 import { CotizadorIsapresBackground } from "@/components/sections/cotizador-isapres/cotizador-isapres-background";
 import { PlanResultCard } from "@/components/sections/cotizador-isapres/plan-result-card";
+import { SolicitarCriteriaAlert } from "@/components/sections/cotizador-isapres/solicitar-criteria-alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SectionTitle } from "@/components/ui/section-title";
 import {
   Select,
   SelectContent,
@@ -19,12 +19,30 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cotizadorIsapresConfig } from "@/constants/cotizador-isapres";
-import type { CotizadorPlan } from "@/constants/cotizador-isapres";
+import { cotizadorUi } from "@/constants/cotizador-ui";
+import { useCotizadorPlans } from "@/hooks/use-cotizador-plans";
+import { useEconomicIndicators } from "@/hooks/use-economic-indicators";
 import { buildCotizadorUrl, mapSortToOrden } from "@/lib/cotizador";
+import {
+  getSolicitarCriteriaValidationMessage,
+  validateSearchCriteria,
+} from "@/lib/validation/solicitar-criteria";
+import type { CotizadorPlan } from "@/types/cotizador-plan";
 import { cn } from "@/lib/utils";
 
-const { sectionId, eyebrow, title, resultsSummary, regions, genders, sortOptions, isapreFilters, priceRange, plans } =
-  cotizadorIsapresConfig;
+const {
+  sectionId,
+  eyebrow,
+  title,
+  resultsSummary,
+  regions,
+  genders,
+  sortOptions,
+  isapreFilters,
+  priceRange,
+} = cotizadorIsapresConfig;
+
+const DEFAULT_UF_TO_CLP = 39_000;
 
 function formatClp(value: number) {
   return new Intl.NumberFormat("es-CL", {
@@ -41,12 +59,40 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
   const [gender, setGender] = useState<string>(genders[0]);
   const [income, setIncome] = useState("");
   const [age, setAge] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
   const [dependantAges, setDependantAges] = useState<string[]>([]);
   const [formError, setFormError] = useState<string | null>(null);
+  const [submittingPlanId, setSubmittingPlanId] = useState<string | null>(null);
+  const [solicitarAlertOpen, setSolicitarAlertOpen] = useState(false);
+  const [solicitarAlertMessage, setSolicitarAlertMessage] = useState("");
   const [isapreSelection, setIsapreSelection] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(isapreFilters.map((filter) => [filter.id, filter.checked])),
+    Object.fromEntries(
+      isapreFilters.map((filter) => [filter.id, !filter.disabled]),
+    ),
   );
+  const criteriaFormRef = useRef<HTMLFormElement>(null);
+
+  const { data: indicators } = useEconomicIndicators();
+  const ufToClp = indicators?.uf ?? DEFAULT_UF_TO_CLP;
+  const { data: plans = [], isLoading: plansLoading, error: plansError } = useCotizadorPlans(ufToClp);
+
+  const criteriaInput = {
+    region,
+    income,
+    age,
+    gender,
+    dependantAges,
+  };
+
+  function focusCriteriaForm(message?: string) {
+    if (message) setFormError(message);
+    criteriaFormRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function showSolicitarCriteriaAlert(message: string) {
+    setSolicitarAlertMessage(message);
+    setSolicitarAlertOpen(true);
+    focusCriteriaForm();
+  }
 
   const handleAddDependant = () => {
     setDependantAges((current) => [...current, ""]);
@@ -60,28 +106,23 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
     setDependantAges((current) => current.filter((_, i) => i !== index));
   };
 
-  const validateForm = (): string | null => {
+  const getCotizanteData = () => {
     const parsedAge = parseInt(age, 10);
-    if (!Number.isFinite(parsedAge) || parsedAge < 0 || parsedAge > 120) {
-      return "Ingresa una edad válida entre 0 y 120 años.";
-    }
-
     const cargas = dependantAges
       .map((value) => parseInt(value, 10))
       .filter((value) => Number.isFinite(value) && value >= 0 && value <= 120);
 
-    if (dependantAges.some((value) => value.trim() !== "") && cargas.length !== dependantAges.length) {
-      return "Revisa las edades de los asegurados adicionales.";
-    }
-
-    return null;
+    return {
+      region,
+      edad: parsedAge,
+      sexo: gender,
+      ingreso: income.trim() || undefined,
+      cargas: cargas.length > 0 ? cargas : undefined,
+    };
   };
 
   const buildFormCotizadorUrl = (options?: { plan?: CotizadorPlan }) => {
-    const parsedAge = parseInt(age, 10);
-    const cargas = dependantAges
-      .map((value) => parseInt(value, 10))
-      .filter((value) => Number.isFinite(value) && value >= 0 && value <= 120);
+    const cotizante = getCotizanteData();
 
     const selectedIsapres = isapreFilters
       .filter((filter) => isapreSelection[filter.id] && !filter.disabled)
@@ -97,17 +138,10 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
         ? [...selectedIsapres, planIsapreId]
         : selectedIsapres;
 
-    const searchTerm = searchQuery.trim();
-    const q = plan?.code ?? (searchTerm || undefined);
-
     return buildCotizadorUrl({
-      region,
-      edad: parsedAge,
-      sexo: gender,
-      ingreso: income.trim() || undefined,
-      cargas: cargas.length > 0 ? cargas : undefined,
+      ...cotizante,
       auto: true,
-      q,
+      ...(plan?.code ? { q: plan.code } : {}),
       orden: mapSortToOrden(sortBy),
       moneda: currency === "uf" ? "uf" : "clp",
       ...(isapres.length > 0 ? { isapres } : {}),
@@ -118,51 +152,84 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
     event.preventDefault();
     setFormError(null);
 
-    const validationError = validateForm();
+    const validationError = validateSearchCriteria(criteriaInput);
     if (validationError) {
-      setFormError(validationError);
+      focusCriteriaForm(validationError);
       return;
     }
 
     window.location.href = buildFormCotizadorUrl();
   };
 
-  const handleSolicitarPlan = (plan: CotizadorPlan) => {
+  const handleSolicitarPlan = async (plan: CotizadorPlan) => {
     setFormError(null);
 
-    const validationError = validateForm();
+    const validationError = getSolicitarCriteriaValidationMessage(criteriaInput);
     if (validationError) {
-      setFormError(validationError);
+      showSolicitarCriteriaAlert(validationError);
       return;
     }
 
-    window.location.href = buildFormCotizadorUrl({ plan });
+    setSubmittingPlanId(plan.id);
+
+    try {
+      const response = await fetch("/api/cotizador/solicitar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plan: plan.code,
+          ...getCotizanteData(),
+        }),
+      });
+
+      const payload = (await response.json().catch(() => null)) as {
+        ok?: boolean;
+        url?: string;
+        error?: string;
+      } | null;
+
+      if (!response.ok || !payload?.url) {
+        throw new Error(payload?.error ?? "No se pudo abrir la solicitud del plan.");
+      }
+
+      window.location.href = payload.url;
+    } catch (error) {
+      setSubmittingPlanId(null);
+      showSolicitarCriteriaAlert(
+        error instanceof Error
+          ? error.message
+          : "No se pudo abrir la solicitud del plan. Intenta nuevamente.",
+      );
+    }
   };
+
+  const displayedCount = plans.length;
 
   return (
     <section
       id={sectionId}
-      className="relative w-full overflow-hidden py-16 sm:py-20 md:py-28"
+      data-cotizador-brand
+      className={cn("relative w-full overflow-hidden py-16 sm:py-20 md:py-28", cotizadorUi.canvas)}
       aria-labelledby="cotizador-isapres-title"
     >
       <CotizadorIsapresBackground />
 
       <Container size="2xl" padding="default" className="relative z-10">
-        <div className="space-y-6">
-          <header className="space-y-2">
-            <SectionTitle
-              id="cotizador-isapres-title"
-              as={asPage ? "h1" : "h2"}
-              eyebrow={eyebrow}
-              prefix={title.prefix}
-              highlight={title.highlight}
-            />
+        <div className="space-y-5">
+          <header className="motion-safe-fade-in space-y-2">
+            <p className={cotizadorUi.sectionEyebrow}>{eyebrow}</p>
+            {asPage ? (
+              <h1 id="cotizador-isapres-title" className={cotizadorUi.sectionTitle}>
+                {title.prefix} {title.highlight}
+              </h1>
+            ) : (
+              <h2 id="cotizador-isapres-title" className={cotizadorUi.sectionTitle}>
+                {title.prefix} {title.highlight}
+              </h2>
+            )}
           </header>
 
-          <form
-            onSubmit={handleSubmit}
-            className="rounded-2xl border border-border/70 bg-surface p-4 shadow-sm sm:p-5"
-          >
+          <form ref={criteriaFormRef} onSubmit={handleSubmit} className={cotizadorUi.criteriaPanel}>
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1fr_88px_120px_auto_auto] lg:items-end">
               <div className="space-y-1.5">
                 <Label htmlFor="region">Región</Label>
@@ -236,7 +303,10 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
 
               <Button
                 type="submit"
-                className="h-11 rounded-full px-6 text-sm font-semibold shadow-glow lg:col-span-1"
+                className={cn(
+                  "h-11 rounded-full px-6 text-sm font-bold shadow-[var(--cot-shadow-cta)] lg:col-span-1",
+                  cotizadorUi.cta,
+                )}
               >
                 Buscar mejor plan
               </Button>
@@ -277,7 +347,7 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
             ) : null}
 
             {formError ? (
-              <p className="text-destructive mt-4 text-sm" role="alert">
+              <p className="mt-4 text-sm text-red-600" role="alert">
                 {formError}
               </p>
             ) : null}
@@ -285,10 +355,10 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-3">
-              <Badge className="rounded-full px-3 py-1 text-xs font-semibold">
-                Mostrando {resultsSummary.showing} de {resultsSummary.total}
+              <Badge className="rounded-full border border-[var(--cot-border)] bg-white px-3 py-1 text-xs font-semibold text-[var(--cot-primary-dark)] shadow-sm">
+                Mostrando {displayedCount} de {resultsSummary.total}
               </Badge>
-              <p className="text-muted-foreground text-sm">{resultsSummary.subtitle}</p>
+              <p className={cn("text-sm", cotizadorUi.mutedText)}>{resultsSummary.subtitle}</p>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
@@ -308,15 +378,15 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
                 </Select>
               </div>
 
-              <div className="bg-muted flex rounded-full p-0.5">
+              <div className="bg-[var(--cot-surface-hover)] flex rounded-full p-0.5">
                 <button
                   type="button"
                   onClick={() => setCurrency("pesos")}
                   className={cn(
                     "rounded-full px-3 py-1 text-xs font-medium transition-colors",
                     currency === "pesos"
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground",
+                      ? "bg-[var(--cot-primary)] text-[var(--cot-primary-foreground)] shadow-sm"
+                      : cotizadorUi.mutedText,
                   )}
                 >
                   Pesos
@@ -327,8 +397,8 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
                   className={cn(
                     "rounded-full px-3 py-1 text-xs font-medium transition-colors",
                     currency === "uf"
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground",
+                      ? "bg-[var(--cot-primary)] text-[var(--cot-primary-foreground)] shadow-sm"
+                      : cotizadorUi.mutedText,
                   )}
                 >
                   UF
@@ -337,20 +407,9 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
             </div>
           </div>
 
-          <div className="relative">
-            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" aria-hidden />
-            <Input
-              className="h-11 pl-10"
-              placeholder="Buscar por nombre, código o Isapre..."
-              aria-label="Buscar por nombre, código o Isapre"
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-            />
-          </div>
-
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[240px_1fr]">
-            <aside className="space-y-5 rounded-2xl border border-border/70 bg-surface p-4 shadow-sm lg:sticky lg:top-24 lg:self-start">
-              <h3 className="text-foreground text-sm font-semibold">Filtros</h3>
+            <aside className={cotizadorUi.filterPanel}>
+              <h3 className="text-sm font-semibold text-[var(--cot-primary-dark)]">Filtros</h3>
 
               <div className="space-y-3">
                 <Label className="text-muted-foreground text-xs">Precio</Label>
@@ -402,14 +461,36 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
               </div>
             </aside>
 
-            <div className="space-y-4">
-              {plans.map((plan) => (
-                <PlanResultCard key={plan.id} plan={plan} onSolicitar={handleSolicitarPlan} />
-              ))}
+            <div className="flex flex-col gap-4">
+              {plansLoading ? (
+                <p className={cn("rounded-xl border bg-white px-6 py-10 text-center text-sm", cotizadorUi.border)}>
+                  Cargando planes…
+                </p>
+              ) : plansError ? (
+                <p className="rounded-xl border border-red-200 bg-red-50 px-6 py-10 text-center text-sm text-red-700" role="alert">
+                  No se pudieron cargar los planes. Intenta recargar la página.
+                </p>
+              ) : (
+                plans.map((plan) => (
+                  <PlanResultCard
+                    key={plan.id}
+                    plan={plan}
+                    onSolicitar={handleSolicitarPlan}
+                    isSubmitting={submittingPlanId === plan.id}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>
       </Container>
+
+      <SolicitarCriteriaAlert
+        open={solicitarAlertOpen}
+        message={solicitarAlertMessage}
+        onOpenChange={setSolicitarAlertOpen}
+        onConfirm={() => focusCriteriaForm()}
+      />
     </section>
   );
 }
