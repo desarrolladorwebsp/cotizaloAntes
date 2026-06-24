@@ -1,0 +1,76 @@
+/*
+ * Mobile-first shell — native-app feel on small screens.
+ * Imported from globals.css
+ */
+
+@theme {
+  /* Touch & mobile spacing scale */
+  --spacing-touch: 3rem; /* 48px — WCAG / Material touch target */
+  --spacing-gutter: 1rem; /* 16px base horizontal gutter */
+  --spacing-gutter-sm: 1.25rem; /* 20px */
+  --spacing-gutter-md: 1.5rem; /* 24px */
+  --spacing-section-mobile: 2.5rem; /* 40px vertical section rhythm */
+  --spacing-section-tablet: 4rem;
+  --spacing-stack-mobile: 1rem; /* vertical stack between blocks */
+  --spacing-stack-tablet: 1.5rem;
+}
+
+@utility app-shell {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100dvh;
+  flex-direction: column;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+@utility app-main {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+}
+
+@utility touch-target {
+  min-height: var(--spacing-touch);
+  min-width: var(--spacing-touch);
+}
+
+@utility touch-target-inline {
+  min-height: var(--spacing-touch);
+}
+
+@utility mobile-gutter {
+  padding-left: max(var(--spacing-gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--spacing-gutter), env(safe-area-inset-right, 0px));
+}
+
+@utility mobile-gutter-sm {
+  padding-left: max(var(--spacing-gutter-sm), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--spacing-gutter-sm), env(safe-area-inset-right, 0px));
+}
+
+@utility mobile-section-y {
+  padding-top: var(--spacing-section-mobile);
+  padding-bottom: var(--spacing-section-mobile);
+}
+
+@utility mobile-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-stack-mobile);
+}
+
+@utility contain-layout-x {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}

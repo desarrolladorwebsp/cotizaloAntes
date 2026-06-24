@@ -29,10 +29,10 @@ const buttonVariants = cva(
           "bg-primary text-primary-foreground shadow-glow hover:bg-primary-hover hover:shadow-lg active:scale-[0.98]",
       },
       size: {
-        default: "h-11 px-5 text-sm",
-        sm: "h-9 rounded-md px-3.5 text-sm",
-        lg: "h-12 rounded-xl px-6 text-base",
-        icon: "h-11 w-11",
+        default: "touch-target-inline h-12 px-5 text-sm sm:h-11",
+        sm: "h-10 min-h-10 rounded-md px-3.5 text-sm sm:min-h-9",
+        lg: "touch-target-inline h-12 rounded-xl px-6 text-base sm:h-12",
+        icon: "touch-target h-12 w-12",
       },
     },
     defaultVariants: {

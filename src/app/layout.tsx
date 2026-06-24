@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import type { Metadata, Viewport } from "next";
 import { DM_Serif_Display, Inter } from "next/font/google";
 
-import { SiteFooter, SiteHeader, SocialSidebar } from "@/components/layout";
+import { AppShell } from "@/components/layout/app-shell";
 import { Providers } from "@/components/providers";
 import { GlobalJsonLd } from "@/components/seo/json-ld";
 import { siteConfig } from "@/constants/site";
@@ -103,15 +103,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es-CL" className={`${inter.variable} ${dmSerif.variable}`} suppressHydrationWarning>
-      <body className="min-h-dvh-screen bg-background font-sans text-foreground antialiased">
+      <body className="bg-background font-sans text-foreground antialiased">
         <GlobalJsonLd />
         <Providers>
-          <div className="flex min-h-dvh-screen flex-col">
-            <SiteHeader />
-            <SocialSidebar />
-            <main className="flex flex-1 flex-col pt-16 sm:pt-[4.5rem]">{children}</main>
-            <SiteFooter />
-          </div>
+          <AppShell>{children}</AppShell>
         </Providers>
       </body>
     </html>

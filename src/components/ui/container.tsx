@@ -3,7 +3,7 @@ import { type HTMLAttributes } from "react";
 
 import { cn } from "@/lib/utils";
 
-const containerVariants = cva("mx-auto w-full", {
+const containerVariants = cva("mx-auto w-full max-w-full min-w-0", {
   variants: {
     size: {
       sm: "max-w-screen-sm",
@@ -15,9 +15,9 @@ const containerVariants = cva("mx-auto w-full", {
     },
     padding: {
       none: "",
-      default: "px-4 sm:px-6 lg:px-8",
-      tight: "px-4",
-      wide: "px-4 sm:px-8 lg:px-12",
+      default: "mobile-gutter sm:px-6 lg:px-8",
+      tight: "mobile-gutter",
+      wide: "mobile-gutter-sm sm:px-8 lg:px-12",
     },
   },
   defaultVariants: {

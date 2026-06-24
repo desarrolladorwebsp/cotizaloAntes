@@ -10,7 +10,7 @@ const Input = forwardRef<HTMLInputElement, ComponentProps<"input">>(
         ref={ref}
         className={cn(
           "border-input bg-surface text-foreground placeholder:text-muted-foreground",
-          "flex h-11 w-full rounded-lg border px-4 py-2 text-sm shadow-xs",
+          "flex touch-target-inline h-12 w-full rounded-lg border px-4 py-2 text-base shadow-xs sm:h-11 sm:text-sm",
           "transition-colors duration-200",
           "focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/20",
           "disabled:cursor-not-allowed disabled:opacity-50",

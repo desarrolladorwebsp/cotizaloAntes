@@ -44,7 +44,7 @@ function SocialLink({
       rel="noopener noreferrer"
       aria-label={label}
       className={cn(
-        "flex h-10 w-10 items-center justify-center rounded-full text-white",
+        "flex touch-target h-12 w-12 items-center justify-center rounded-full text-white",
         "transition-transform duration-200 hover:scale-110",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
         className,
@@ -61,7 +61,7 @@ function WhatsAppButton({ className }: { className?: string }) {
       href={socialLinks.whatsapp.href}
       label={socialLinks.whatsapp.label}
       icon={WhatsAppIcon}
-      className={cn("h-11 w-11 bg-[#25D366] shadow-lg shadow-[#25D366]/30", className)}
+      className={cn("touch-target h-12 w-12 bg-[#25D366] shadow-lg shadow-[#25D366]/30", className)}
     />
   );
 }
@@ -105,7 +105,7 @@ function MobileSidebar() {
 
   return (
     <div
-      className="pointer-events-none fixed bottom-24 right-3 z-[var(--z-floating)] flex md:hidden"
+      className="pointer-events-none fixed right-[max(0.75rem,env(safe-area-inset-right,0px))] bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] z-[var(--z-floating)] flex md:hidden"
       aria-label="Redes sociales"
     >
       <div className="pointer-events-auto flex flex-col items-center gap-2">
@@ -145,7 +145,7 @@ function MobileSidebar() {
           aria-expanded={expanded}
           aria-label={expanded ? "Ocultar redes sociales" : "Mostrar redes sociales"}
           className={cn(
-            "flex h-9 w-9 items-center justify-center rounded-full",
+            "touch-target flex h-12 w-12 items-center justify-center rounded-full",
             "bg-[#1a1a1a]/85 text-white backdrop-blur-md",
             "shadow-md ring-1 ring-white/10",
             "transition-transform duration-200 hover:scale-105",

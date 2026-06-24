@@ -50,7 +50,7 @@ function NavLink({
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     variant === "desktop" &&
       "px-2.5 py-2 text-xs xl:px-3 xl:text-sm",
-    variant === "mobile" && "w-full px-4 py-3 text-base",
+    variant === "mobile" && "touch-target-inline w-full px-4 py-3 text-base",
     isActive
       ? variant === "desktop"
         ? "bg-primary/12 font-semibold text-primary"

@@ -40,13 +40,13 @@ export function SiteFooter() {
   return (
     <footer
       ref={ref}
-      className="bg-footer text-footer-foreground safe-area-bottom relative mt-auto w-full overflow-hidden border-t border-white/[0.08]"
+      className="bg-footer text-footer-foreground safe-area-bottom contain-layout-x relative mt-auto w-full overflow-hidden border-t border-white/[0.08]"
       role="contentinfo"
     >
       <FooterBackground />
 
       <m.div
-        className="relative z-10 mx-auto w-full max-w-screen-2xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20"
+        className="relative z-10 mx-auto w-full min-w-0 max-w-screen-2xl mobile-gutter py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20"
         initial={false}
         animate={isInView ? { opacity: 1, y: 0 } : undefined}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}

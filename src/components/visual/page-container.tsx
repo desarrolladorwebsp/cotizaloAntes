@@ -8,7 +8,7 @@ export function PageContainer({ className, children, ...props }: PageContainerPr
   return (
     <div
       className={cn(
-        "safe-area-padding flex min-h-dvh-screen w-full flex-col overflow-x-hidden",
+        "contain-layout-x safe-area-padding flex min-h-0 w-full max-w-full flex-col overflow-x-hidden",
         className,
       )}
       {...props}

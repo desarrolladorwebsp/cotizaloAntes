@@ -3,14 +3,14 @@ import { type HTMLAttributes } from "react";
 
 import { cn } from "@/lib/utils";
 
-const sectionVariants = cva("w-full", {
+const sectionVariants = cva("contain-layout-x w-full", {
   variants: {
     spacing: {
       none: "",
-      sm: "py-12 md:py-16",
-      md: "py-16 md:py-24",
-      lg: "py-20 md:py-32",
-      xl: "py-24 md:py-40",
+      sm: "mobile-section-y md:py-16",
+      md: "py-10 sm:py-16 md:py-24",
+      lg: "py-12 sm:py-20 md:py-32",
+      xl: "py-14 sm:py-24 md:py-40",
     },
     background: {
       default: "bg-background",

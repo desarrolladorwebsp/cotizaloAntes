@@ -19,13 +19,26 @@ export const spacing = {
   20: "5rem",
   24: "6rem",
   32: "8rem",
+  touch: "3rem",
   safe: {
     top: "env(safe-area-inset-top, 0px)",
     bottom: "env(safe-area-inset-bottom, 0px)",
     left: "env(safe-area-inset-left, 0px)",
     right: "env(safe-area-inset-right, 0px)",
   },
+  gutter: {
+    mobile: "1rem",
+    sm: "1.25rem",
+    md: "1.5rem",
+    lg: "2rem",
+  },
+  stack: {
+    mobile: "1rem",
+    tablet: "1.5rem",
+    desktop: "2rem",
+  },
   section: {
+    mobile: "2.5rem",
     sm: "3rem",
     md: "4rem",
     lg: "6rem",
@@ -33,7 +46,8 @@ export const spacing = {
   },
   container: {
     px: "1rem",
-    pxSm: "1.5rem",
+    pxSm: "1.25rem",
+    pxMd: "1.5rem",
     pxLg: "2rem",
   },
 } as const;

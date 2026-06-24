@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./cotizador-brand.css";
+@import "./mobile-shell.css";
 
 /*
  * Design tokens synced with src/styles/tokens/
@@ -149,15 +150,34 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scroll-behavior: smooth;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    width: 100%;
+    max-width: 100%;
     min-height: 100dvh;
     overflow-x: hidden;
+    overscroll-behavior-x: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  #app-main > * {
+    min-width: 0;
   }
 
   :focus-visible {
