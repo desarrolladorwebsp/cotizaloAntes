@@ -31,7 +31,7 @@ function PlanActionButton({
       className={cn(
         cotizadorUi.planActionBase,
         isPrimary ? cotizadorUi.planActionPrimary : cotizadorUi.planActionSecondary,
-        disabled && "pointer-events-none opacity-60",
+        disabled && "pointer-events-none cursor-not-allowed opacity-50",
       )}
     >
       <span
@@ -56,6 +56,7 @@ export function PlanResultCard({
 }) {
   const logoSrc = getIsapreLogo(plan.provider);
   const displayName = plan.planName || plan.code;
+  const hasPdf = Boolean(plan.pdfUrl?.trim());
 
   return (
     <article className={cotizadorUi.planCard}>
@@ -119,6 +120,7 @@ export function PlanResultCard({
               label="PDF"
               variant="secondary"
               icon={<FileText className="size-3.5" />}
+              disabled={!hasPdf}
             />
             <PlanActionButton
               label={isSubmitting ? "Abriendo..." : "Solicitar"}
@@ -131,7 +133,7 @@ export function PlanResultCard({
         </div>
       </div>
 
-      <div className="grid bg-white md:grid-cols-2">
+      <div className={cn("grid md:grid-cols-2", cotizadorUi.planCardCoverage)}>
         <CoverageColumnCompact
           label="Cobertura hospitalaria"
           entries={plan.hospitals}

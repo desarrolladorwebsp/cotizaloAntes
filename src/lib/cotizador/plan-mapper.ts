@@ -15,6 +15,7 @@ export type ApiHealthPlanSummary = {
   base_price_uf: number;
   has_top: boolean;
   additional_notes: string | null;
+  pdf_url?: string | null;
   coverage_summary: ApiPlanCoverageSummary;
 };
 
@@ -74,6 +75,7 @@ export function mapPreviewPlanToCotizadorPlan(
     centers: [],
     hasTop: plan.has_top,
     basePriceUf: plan.base_price_uf,
+    pdfUrl: plan.pdf_url ?? null,
   };
 }
 

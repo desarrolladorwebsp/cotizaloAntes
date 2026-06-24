@@ -54,6 +54,7 @@ async function fetchCotizadorPlans(ufToClp: number): Promise<CotizadorPlan[]> {
       centers: plan.centers.map((item) => ({ ...item })),
       hasTop: plan.hasTop ?? false,
       basePriceUf: plan.basePriceUf,
+      pdfUrl: null,
     };
   });
 }

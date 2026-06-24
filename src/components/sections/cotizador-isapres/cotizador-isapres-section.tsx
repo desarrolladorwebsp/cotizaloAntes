@@ -461,7 +461,7 @@ export function CotizadorIsapresSection({ asPage = false }: { asPage?: boolean }
               </div>
             </aside>
 
-            <div className="flex flex-col gap-4">
+            <div className={cotizadorUi.planCardList}>
               {plansLoading ? (
                 <p className={cn("rounded-xl border bg-white px-6 py-10 text-center text-sm", cotizadorUi.border)}>
                   Cargando planes…

@@ -17,6 +17,17 @@
   --cot-shadow-card: 0 4px 24px -8px #0000000f;
   --cot-shadow-card-hover: 0 12px 32px -10px #0000001a;
   --cot-shadow-cta: 0 8px 24px -8px #ed7d1166;
+  --cot-shadow-plan-card:
+    0 1px 2px rgb(0 0 0 / 0.05), 0 2px 8px -2px rgb(0 0 0 / 0.06),
+    0 10px 28px -8px rgb(0 0 0 / 0.09);
+  --cot-shadow-plan-card-hover:
+    0 0 0 1px var(--cot-primary), 0 4px 14px -4px rgb(237 125 17 / 0.12),
+    0 16px 40px -10px rgb(237 125 17 / 0.16);
+  --cot-plan-card-surface: #ffffff;
+  --cot-plan-card-border: color-mix(in srgb, var(--cot-border) 80%, var(--cot-foreground) 20%);
+  --cot-plan-card-ring: rgb(0 0 0 / 0.05);
+  --cot-plan-card-header-bg: color-mix(in srgb, var(--cot-bg-layout) 14%, white);
+  --cot-plan-card-coverage-bg: #fafafa;
   --cot-criteria-surface: #ffffff;
   --cot-criteria-ring: #e5e7eb;
   color: var(--cot-foreground);

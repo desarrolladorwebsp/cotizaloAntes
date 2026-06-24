@@ -16,9 +16,11 @@ export const cotizadorUi = {
   ctaOutline:
     "border border-[var(--cot-border)] bg-white text-[var(--cot-foreground)] transition hover:bg-[var(--cot-surface-hover)]",
   planCard:
-    "overflow-hidden rounded-xl border border-[var(--cot-border)] bg-white transition-[box-shadow,border-color,transform] duration-200 hover:-translate-y-1 hover:border-[var(--cot-primary)] hover:shadow-[0_0_0_1px_var(--cot-primary),var(--cot-shadow-card-hover)]",
+    "overflow-hidden rounded-xl border border-[var(--cot-plan-card-border)] bg-[var(--cot-plan-card-surface)] shadow-[var(--cot-shadow-plan-card)] ring-1 ring-inset ring-[var(--cot-plan-card-ring)] transition-[box-shadow,border-color,transform] duration-200 hover:-translate-y-1 hover:border-[var(--cot-primary)] hover:shadow-[var(--cot-shadow-plan-card-hover)]",
   planCardHeader:
-    "flex flex-col gap-3 border-b border-[var(--cot-border)] bg-white px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-4",
+    "flex flex-col gap-3 border-b border-[var(--cot-plan-card-border)] bg-[var(--cot-plan-card-header-bg)] px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-4",
+  planCardCoverage: "bg-[var(--cot-plan-card-coverage-bg)]",
+  planCardList: "flex flex-col gap-5 sm:gap-6",
   planProvider:
     "truncate text-xs font-bold uppercase leading-snug tracking-wide text-[var(--cot-primary-dark)] sm:text-sm",
   planBadge:

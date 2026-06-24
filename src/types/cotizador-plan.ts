@@ -19,4 +19,5 @@ export type CotizadorPlan = {
   centers: CoverageProvider[];
   hasTop: boolean;
   basePriceUf: number;
+  pdfUrl?: string | null;
 };
