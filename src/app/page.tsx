@@ -1,5 +1,5 @@
+import { CotizadorEmbedSection } from "@/components/cotizador";
 import { HeroSection } from "@/components/hero";
-import { CotizadorIsapresSection } from "@/components/sections/cotizador-isapres";
 import { WhyChooseUsSection } from "@/components/sections/why-choose-us";
 import { HomeJsonLd } from "@/components/seo/json-ld";
 import { createPageMetadata } from "@/constants/seo";
@@ -12,7 +12,7 @@ export default function HomePage() {
       <HomeJsonLd />
       <HeroSection />
       <WhyChooseUsSection />
-      <CotizadorIsapresSection />
+      <CotizadorEmbedSection />
     </>
   );
 }

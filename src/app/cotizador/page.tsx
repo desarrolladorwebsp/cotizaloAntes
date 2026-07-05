@@ -1,4 +1,4 @@
-import { CotizadorIsapresSection } from "@/components/sections/cotizador-isapres";
+import { CotizadorEmbedSection } from "@/components/cotizador";
 import { PageJsonLd } from "@/components/seo/json-ld";
 import { createPageMetadata } from "@/constants/seo";
 
@@ -8,7 +8,7 @@ export default function CotizadorPage() {
   return (
     <>
       <PageJsonLd page="cotizador" />
-      <CotizadorIsapresSection asPage />
+      <CotizadorEmbedSection asPage />
     </>
   );
 }
