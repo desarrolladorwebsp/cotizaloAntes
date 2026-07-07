@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useCallback, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { type CSSProperties, useCallback, useLayoutEffect, useRef, useState } from "react";
 
 import { useIsMobile } from "@/hooks/use-media-query";
 import {
