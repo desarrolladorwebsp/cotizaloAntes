@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 
 import {
   COTIZADOR_WIDGET_AGENT_KEY,
@@ -39,17 +39,12 @@ interface CotizadorWidgetProps {
 export function CotizadorWidget({ compact = false }: CotizadorWidgetProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mountedRef = useRef(false);
-  const scriptReadyRef = useRef(false);
-  const [baseUrl, setBaseUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    setBaseUrl(resolveCotizadorWidgetBaseUrl());
-  }, []);
+  const baseUrl = resolveCotizadorWidgetBaseUrl();
+  const routing = resolveCotizadorWidgetRouting(baseUrl);
 
   const mountWidget = useCallback(() => {
     const container = containerRef.current;
-    const resolvedBaseUrl = baseUrl ?? resolveCotizadorWidgetBaseUrl();
-    if (!container || mountedRef.current || !resolvedBaseUrl) return;
+    if (!container || mountedRef.current) return;
     if (!window.CotizadorWidget?.mount) return;
 
     if (container.dataset.cvMounted === "true") {
@@ -57,12 +52,10 @@ export function CotizadorWidget({ compact = false }: CotizadorWidgetProps) {
       return;
     }
 
-    const routing = resolveCotizadorWidgetRouting(resolvedBaseUrl);
-
     window.CotizadorWidget.mount(container, {
       agentKey: COTIZADOR_WIDGET_AGENT_KEY,
       partner: COTIZADOR_WIDGET_AGENT_KEY,
-      baseUrl: resolvedBaseUrl,
+      baseUrl,
       routing,
       fullWidth: !compact,
       minHeight: COTIZADOR_WIDGET_MIN_HEIGHT,
@@ -71,22 +64,11 @@ export function CotizadorWidget({ compact = false }: CotizadorWidgetProps) {
     });
 
     mountedRef.current = true;
-  }, [baseUrl, compact]);
-
-  useEffect(() => {
-    if (!baseUrl || !scriptReadyRef.current) return;
-    mountWidget();
-  }, [baseUrl, mountWidget]);
+  }, [baseUrl, compact, routing]);
 
   const handleScriptReady = useCallback(() => {
-    scriptReadyRef.current = true;
     mountWidget();
   }, [mountWidget]);
-
-  const routing =
-    baseUrl != null
-      ? resolveCotizadorWidgetRouting(baseUrl)
-      : resolveCotizadorWidgetRouting(resolveCotizadorWidgetBaseUrl());
 
   return (
     <>
@@ -95,7 +77,7 @@ export function CotizadorWidget({ compact = false }: CotizadorWidgetProps) {
         data-cotizador-widget
         data-agent-key={COTIZADOR_WIDGET_AGENT_KEY}
         data-partner={COTIZADOR_WIDGET_AGENT_KEY}
-        data-base-url={baseUrl ?? undefined}
+        data-base-url={baseUrl}
         data-routing={routing}
         data-auto-search="true"
         data-min-height={String(COTIZADOR_WIDGET_MIN_HEIGHT)}

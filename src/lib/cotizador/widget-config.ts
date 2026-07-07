@@ -9,10 +9,6 @@ export const COTIZADOR_WIDGET_SCRIPT_URL =
 
 export const COTIZADOR_WIDGET_MIN_HEIGHT = 720;
 
-function isLocalHostUrl(value: string): boolean {
-  return /localhost|127\.0\.0\.1/i.test(value);
-}
-
 function readConfiguredBaseUrl(): string {
   const configured =
     process.env.NEXT_PUBLIC_COTIZADOR_URL?.trim() || PROD_COTIZADOR_BASE_URL;
