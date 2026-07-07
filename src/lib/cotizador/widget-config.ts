@@ -7,7 +7,43 @@ export const COTIZADOR_WIDGET_SCRIPT_URL =
   process.env.NEXT_PUBLIC_COTIZADOR_WIDGET_SCRIPT_URL?.trim() ||
   "https://cotizador-widget.vercel.app/cotizador-widget.js";
 
-export const COTIZADOR_WIDGET_MIN_HEIGHT = 720;
+export const COTIZADOR_WIDGET_MIN_HEIGHT = 1500;
+export const COTIZADOR_WIDGET_MIN_HEIGHT_DESKTOP = 1500;
+export const COTIZADOR_WIDGET_MIN_HEIGHT_MOBILE = 1200;
+export const COTIZADOR_WIDGET_MIN_HEIGHT_PAGE_MOBILE = 1350;
+export const COTIZADOR_WIDGET_MIN_HEIGHT_PAGE_DESKTOP = 1650;
+
+export function resolveCotizadorWidgetMinHeight(options: {
+  isMobile: boolean;
+  asPage?: boolean;
+}): number {
+  const { isMobile, asPage } = options;
+
+  if (typeof window === "undefined") {
+    if (isMobile) {
+      return asPage
+        ? COTIZADOR_WIDGET_MIN_HEIGHT_PAGE_MOBILE
+        : COTIZADOR_WIDGET_MIN_HEIGHT_MOBILE;
+    }
+    return asPage
+      ? COTIZADOR_WIDGET_MIN_HEIGHT_PAGE_DESKTOP
+      : COTIZADOR_WIDGET_MIN_HEIGHT_DESKTOP;
+  }
+
+  const viewportHeight = window.innerHeight;
+
+  if (isMobile) {
+    const floor = asPage
+      ? COTIZADOR_WIDGET_MIN_HEIGHT_PAGE_MOBILE
+      : COTIZADOR_WIDGET_MIN_HEIGHT_MOBILE;
+    return Math.max(floor, Math.round(viewportHeight * 0.96));
+  }
+
+  const floor = asPage
+    ? COTIZADOR_WIDGET_MIN_HEIGHT_PAGE_DESKTOP
+    : COTIZADOR_WIDGET_MIN_HEIGHT_DESKTOP;
+  return Math.max(floor, Math.round(viewportHeight * 0.92));
+}
 
 function readConfiguredBaseUrl(): string {
   const configured =

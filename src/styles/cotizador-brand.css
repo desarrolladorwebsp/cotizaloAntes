@@ -3,6 +3,10 @@
  * Fuente: [data-brand=cotizalo-antes] en el cotizador y /api/public/v1/docs
  */
 [data-cotizador-brand] {
+  --cot-widget-min-height-mobile: max(1200px, 96dvh);
+  --cot-widget-min-height-desktop: max(1500px, 92dvh);
+  --cot-widget-min-height-page-mobile: max(1350px, 97dvh);
+  --cot-widget-min-height-page-desktop: max(1650px, 94dvh);
   --cot-primary: #ed7d11;
   --cot-primary-hover: #f59324;
   --cot-primary-dark: #92450a;
@@ -33,6 +37,58 @@
   color: var(--cot-foreground);
 }
 
+[data-cotizador-brand] .cotizador-widget-section {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: var(--cot-widget-min-height-desktop);
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+[data-cotizador-brand] .cotizador-widget-section[data-widget-layout="page"] {
+  min-height: var(--cot-widget-min-height-page-desktop);
+}
+
+@media (max-width: 768px) {
+  [data-cotizador-brand] .cotizador-widget-section {
+    min-height: var(--cot-widget-min-height-mobile);
+  }
+
+  [data-cotizador-brand] .cotizador-widget-section[data-widget-layout="page"] {
+    min-height: var(--cot-widget-min-height-page-mobile);
+  }
+}
+
 [data-cotizador-brand] .cotizador-widget-mount {
-  min-height: var(--cv-widget-min-height, 720px);
+  width: 100%;
+  height: auto;
+  min-height: var(--cv-widget-min-height, var(--cot-widget-min-height-desktop));
+  overflow: visible;
+}
+
+[data-cotizador-brand] .cotizador-widget-mount.cv-widget,
+[data-cotizador-brand] .cotizador-widget-mount.cv-widget[data-mobile-scroll="auto"],
+[data-cotizador-brand] .cotizador-widget-mount.cv-widget[data-mobile-scroll="false"] {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+[data-cotizador-brand] .cotizador-widget-mount.cv-widget--mobile-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+[data-cotizador-brand] .cotizador-widget-mount.cv-widget .cv-widget__iframe {
+  display: block;
+  width: 100%;
+}
+
+[data-cotizador-brand] .cotizador-widget-mount.cv-widget[data-full-width="true"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }

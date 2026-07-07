@@ -18,7 +18,7 @@ export function WidgetCard({
 
   return (
     <div
-      className={`overflow-hidden rounded-xl border border-[var(--cot-border)] bg-white shadow-[var(--cot-shadow-card)] ${className}`}
+      className={`overflow-visible rounded-xl border border-[var(--cot-border)] bg-white shadow-[var(--cot-shadow-card)] ${className}`}
       {...props}
     >
       <div className="flex items-center justify-between gap-2 border-b border-[var(--cot-border)] bg-[var(--cot-surface-hover)]/80 px-3 py-2 sm:px-4">
@@ -40,7 +40,7 @@ export function WidgetCard({
         id="cotizador-widget-panel"
         aria-hidden={!expanded}
         className={
-          expanded ? "block overflow-visible" : "max-h-0 overflow-hidden"
+          expanded ? "block h-auto overflow-visible" : "max-h-0 overflow-hidden"
         }
       >
         {children}
