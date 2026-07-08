@@ -39,7 +39,14 @@ export const footerConfig = {
     { label: "Cotizador AFP", href: "/cotizador/afp" },
     { label: "Cotizador seguros", href: "/cotizador/seguros" },
     { label: "Nosotros", href: "/nosotros" },
+    { label: "Política de privacidad", href: "/politica-privacidad" },
   ],
+  legal: {
+    privacyPolicy: {
+      label: "Política de privacidad",
+      href: "/politica-privacidad",
+    },
+  },
 } as const;
 
 export const INDICATORS_QUERY_CONFIG = {

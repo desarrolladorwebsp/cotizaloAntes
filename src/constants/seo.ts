@@ -128,6 +128,19 @@ export const pageSeo = {
       "isapres premium chile",
     ],
   },
+  politicaPrivacidad: {
+    path: "/politica-privacidad",
+    title: "Política de Privacidad — Protección de Datos Personales",
+    description:
+      "Política de privacidad de Cotízalo Antes conforme a la Ley 21.719 de Chile. Conoce cómo tratamos, protegemos y resguardamos tus datos personales al cotizar Isapres, AFP y seguros.",
+    keywords: [
+      "política de privacidad",
+      "ley 21719 chile",
+      "protección de datos personales",
+      "cotizalo antes privacidad",
+      "datos personales cotizador",
+    ],
+  },
 } as const;
 
 type CreatePageMetadataOptions = {

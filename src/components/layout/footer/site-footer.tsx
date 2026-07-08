@@ -1,6 +1,7 @@
 "use client";
 
 import { m, useInView } from "motion/react";
+import Link from "next/link";
 import { useRef } from "react";
 
 import { FooterBrand } from "@/components/layout/footer/footer-brand";
@@ -10,6 +11,7 @@ import {
   FooterSitemap,
   FooterSocial,
 } from "@/components/layout/footer/footer-sections";
+import { footerConfig } from "@/constants/footer";
 
 function FooterBackground() {
   return (
@@ -61,7 +63,13 @@ export function SiteFooter() {
 
         <div className="mt-12 border-t border-white/[0.08] pt-8 sm:mt-14">
           <p className="text-footer-muted text-center text-xs sm:text-sm">
-            © {year} Cotízalo Antes. Todos los derechos reservados.
+            © {year} Cotízalo Antes. Todos los derechos reservados.{" "}
+            <Link
+              href={footerConfig.legal.privacyPolicy.href}
+              className="text-footer-foreground hover:text-primary underline-offset-4 transition-colors hover:underline"
+            >
+              {footerConfig.legal.privacyPolicy.label}
+            </Link>
           </p>
         </div>
       </m.div>
