@@ -126,3 +126,15 @@ export const privacyPolicySections = [
     ],
   },
 ] as const;
+
+export const privacyPolicyContactCta = {
+  id: "contacto-dudas",
+  eyebrow: "¿Tienes dudas?",
+  title: "Ejerce tus derechos o contáctanos",
+  description:
+    "Si deseas acceder, rectificar o eliminar tus datos personales, escríbenos y responderemos conforme a los plazos de la Ley N° 21.719.",
+} as const;
+
+export function getPrivacyPolicyWhatsAppUrl(phone: string): string {
+  return `https://wa.me/${phone.replace(/\D/g, "")}`;
+}

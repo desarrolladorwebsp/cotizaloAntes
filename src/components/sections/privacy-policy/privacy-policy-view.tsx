@@ -18,10 +18,12 @@ import Link from "next/link";
 import { useRef } from "react";
 
 import { PrivacyPolicyBackground } from "@/components/sections/privacy-policy/privacy-policy-background";
+import { PrivacyPolicyContactCta } from "@/components/sections/privacy-policy/privacy-policy-contact-cta";
 import { PrivacyPolicySectionCard } from "@/components/sections/privacy-policy/privacy-policy-section-card";
 import { Container } from "@/components/ui/container";
 import { PageContainer } from "@/components/visual";
 import {
+  privacyPolicyContactCta,
   privacyPolicyMeta,
   privacyPolicySections,
 } from "@/constants/privacy-policy";
@@ -98,6 +100,25 @@ export function PrivacyPolicyView() {
                     </a>
                   </m.li>
                 ))}
+                <m.li
+                  initial={false}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={
+                    prefersReducedMotion
+                      ? reducedMotionConfig.transition
+                      : { ...baseTransition("normal"), delay: 0.04 * privacyPolicySections.length }
+                  }
+                >
+                  <a
+                    href={`#${privacyPolicyContactCta.id}`}
+                    className={cn(
+                      "text-muted-foreground hover:text-primary block rounded-lg px-3 py-2 text-sm leading-snug transition-colors duration-200",
+                      "hover:bg-primary/5",
+                    )}
+                  >
+                    {privacyPolicyContactCta.eyebrow}
+                  </a>
+                </m.li>
               </ul>
             </nav>
           </m.aside>
@@ -168,6 +189,10 @@ export function PrivacyPolicyView() {
                 );
               })}
             </m.div>
+
+            <div className="mt-5 sm:mt-6">
+              <PrivacyPolicyContactCta />
+            </div>
 
             <m.footer
               className="mt-10 rounded-2xl border border-border/80 bg-white/80 p-6 shadow-sm backdrop-blur-sm sm:p-7"
