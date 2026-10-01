@@ -11,8 +11,8 @@ import {
   LinkedInIcon,
   WhatsAppIcon,
 } from "@/components/layout/social-icons";
-import { socialSidebarLinks } from "@/constants/social";
 import { siteConfig } from "@/constants/site";
+import { socialSidebarLinks } from "@/constants/social";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
