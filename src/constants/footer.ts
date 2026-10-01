@@ -6,11 +6,13 @@ export const footerConfig = {
   tagline: "Cotiza, compara y decide con información clara.",
   contact: {
     whatsappOfficial: {
-      label: `${official.label} ${official.display}`,
+      label: official.display,
+      caption: official.label,
       href: official.href,
     },
     whatsappSales: {
-      label: `${sales.label} ${sales.display}`,
+      label: sales.display,
+      caption: sales.label,
       href: sales.href,
     },
     email: {

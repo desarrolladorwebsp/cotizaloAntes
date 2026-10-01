@@ -24,19 +24,27 @@ export function FooterContact() {
         href={contact.whatsappOfficial.href}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label={`${contact.whatsappOfficial.caption} ${contact.whatsappOfficial.label}`}
         className="inline-flex items-center gap-2.5"
       >
         <MessageCircle className="text-primary h-4 w-4 shrink-0" aria-hidden />
-        <span>{contact.whatsappOfficial.label}</span>
+        <span className="flex flex-col leading-tight">
+          <span>{contact.whatsappOfficial.label}</span>
+          <span className="text-footer-muted text-xs">{contact.whatsappOfficial.caption}</span>
+        </span>
       </FooterLink>
       <FooterLink
         href={contact.whatsappSales.href}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label={`${contact.whatsappSales.caption} ${contact.whatsappSales.label}`}
         className="inline-flex items-center gap-2.5"
       >
         <MessageCircle className="text-primary h-4 w-4 shrink-0" aria-hidden />
-        <span>{contact.whatsappSales.label}</span>
+        <span className="flex flex-col leading-tight">
+          <span>{contact.whatsappSales.label}</span>
+          <span className="text-footer-muted text-xs">{contact.whatsappSales.caption}</span>
+        </span>
       </FooterLink>
       <FooterLink href={contact.email.href} className="inline-flex items-center gap-2.5">
         <Mail className="text-primary h-4 w-4 shrink-0" aria-hidden />

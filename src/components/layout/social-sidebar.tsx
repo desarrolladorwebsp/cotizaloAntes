@@ -11,7 +11,8 @@ import {
   LinkedInIcon,
   WhatsAppIcon,
 } from "@/components/layout/social-icons";
-import { socialLinks, socialSidebarLinks } from "@/constants/social";
+import { socialSidebarLinks } from "@/constants/social";
+import { siteConfig } from "@/constants/site";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
@@ -56,13 +57,24 @@ function SocialLink({
 }
 
 function WhatsAppButton({ className }: { className?: string }) {
+  const sales = siteConfig.contact.whatsapp.sales;
+
   return (
-    <SocialLink
-      href={socialLinks.whatsapp.href}
-      label={socialLinks.whatsapp.label}
-      icon={WhatsAppIcon}
-      className={cn("touch-target h-12 w-12 bg-[#25D366] shadow-lg shadow-[#25D366]/30", className)}
-    />
+    <a
+      href={sales.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${sales.label} ${sales.display}`}
+      className={cn(
+        "flex h-12 items-center gap-2 rounded-full bg-[#25D366] px-3.5 text-white shadow-lg shadow-[#25D366]/30",
+        "transition-transform duration-200 hover:scale-105",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+        className,
+      )}
+    >
+      <WhatsAppIcon className="h-[18px] w-[18px] shrink-0" />
+      <span className="text-sm font-semibold tracking-tight whitespace-nowrap">{sales.display}</span>
+    </a>
   );
 }
 
