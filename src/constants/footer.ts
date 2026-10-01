@@ -1,9 +1,17 @@
+import { siteConfig } from "@/constants/site";
+
+const { official, sales } = siteConfig.contact.whatsapp;
+
 export const footerConfig = {
   tagline: "Cotiza, compara y decide con información clara.",
   contact: {
-    phone: {
-      label: "+56 2 2345 6789",
-      href: "tel:+56223456789",
+    whatsappOfficial: {
+      label: `${official.label} ${official.display}`,
+      href: official.href,
+    },
+    whatsappSales: {
+      label: `${sales.label} ${sales.display}`,
+      href: sales.href,
     },
     email: {
       label: "contacto@cotizaloantes.cl",

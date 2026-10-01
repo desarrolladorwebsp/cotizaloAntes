@@ -1,3 +1,7 @@
+import { siteConfig } from "@/constants/site";
+
+const whatsappSales = siteConfig.contact.whatsapp.sales;
+
 export const socialLinks = {
   facebook: {
     id: "facebook",
@@ -16,9 +20,9 @@ export const socialLinks = {
   },
   whatsapp: {
     id: "whatsapp",
-    label: "WhatsApp",
-    href: "https://wa.me/56930102427",
-    phone: "+56930102427",
+    label: whatsappSales.label,
+    href: whatsappSales.href,
+    phone: whatsappSales.phone,
   },
 } as const;
 

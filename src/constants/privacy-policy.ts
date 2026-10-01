@@ -23,7 +23,7 @@ export const privacyPolicySections = [
     title: "Responsable del tratamiento",
     paragraphs: [
       `El responsable del tratamiento de los datos personales recabados a través de ${siteConfig.url} es ${siteConfig.name}.`,
-      `Para consultas relacionadas con privacidad y protección de datos puede contactarnos en ${siteConfig.contact.email} o al teléfono ${siteConfig.contact.phone}, en horario de atención de lunes a viernes de 9:00 a 18:00 hrs.`,
+      `Para consultas relacionadas con privacidad y protección de datos puede contactarnos en ${siteConfig.contact.email} o al WhatsApp oficial ${siteConfig.contact.phoneDisplay}, en horario de atención de lunes a viernes de 9:00 a 18:00 hrs.`,
     ],
   },
   {

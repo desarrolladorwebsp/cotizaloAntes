@@ -20,8 +20,26 @@ export const siteConfig = {
   language: "es-CL",
   country: "Chile",
   contact: {
-    phone: "+56930102427",
+    /** WhatsApp oficial de la empresa (contacto y privacidad). */
+    phone: "+56929424190",
+    phoneDisplay: "+56 9 2942 4190",
     email: "contacto@cotizaloantes.cl",
+    whatsapp: {
+      official: {
+        label: "WhatsApp oficial",
+        digits: "56929424190",
+        phone: "+56929424190",
+        display: "+56 9 2942 4190",
+        href: "https://wa.me/56929424190",
+      },
+      sales: {
+        label: "WhatsApp ventas",
+        digits: "56930231316",
+        phone: "+56930231316",
+        display: "+56 9 3023 1316",
+        href: "https://wa.me/56930231316",
+      },
+    },
   },
   keywords: [
     "cotizador isapre",

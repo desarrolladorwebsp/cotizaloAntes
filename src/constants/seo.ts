@@ -210,13 +210,22 @@ export function getOrganizationJsonLd() {
       "https://www.instagram.com/cotizalo_antes/",
       "https://www.linkedin.com/in/cotizalo-antes-444946171/",
     ],
-    contactPoint: {
-      "@type": "ContactPoint",
-      telephone: siteConfig.contact.phone,
-      contactType: "customer service",
-      areaServed: "CL",
-      availableLanguage: "Spanish",
-    },
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: siteConfig.contact.whatsapp.official.phone,
+        contactType: "customer service",
+        areaServed: "CL",
+        availableLanguage: "Spanish",
+      },
+      {
+        "@type": "ContactPoint",
+        telephone: siteConfig.contact.whatsapp.sales.phone,
+        contactType: "sales",
+        areaServed: "CL",
+        availableLanguage: "Spanish",
+      },
+    ],
   };
 }
 

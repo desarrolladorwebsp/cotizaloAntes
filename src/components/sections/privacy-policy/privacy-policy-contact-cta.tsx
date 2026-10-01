@@ -12,7 +12,8 @@ import { cn } from "@/lib/utils";
 
 export function PrivacyPolicyContactCta() {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const whatsAppUrl = getPrivacyPolicyWhatsAppUrl(siteConfig.contact.phone);
+  const officialWhatsApp = siteConfig.contact.whatsapp.official;
+  const whatsAppUrl = getPrivacyPolicyWhatsAppUrl(officialWhatsApp.phone);
 
   return (
     <m.section
@@ -65,10 +66,10 @@ export function PrivacyPolicyContactCta() {
                 "inline-flex items-center justify-center gap-2.5 rounded-xl border border-[#25D366]/30 bg-[#25D366]/10 px-4 py-3 text-sm font-medium text-foreground shadow-sm transition-all duration-200",
                 "hover:border-[#25D366]/50 hover:bg-[#25D366]/15 hover:shadow-md",
               )}
-              aria-label={`WhatsApp ${siteConfig.contact.phone} (abre en nueva pestaña)`}
+              aria-label={`${officialWhatsApp.label} ${officialWhatsApp.display} (abre en nueva pestaña)`}
             >
               <MessageCircle className="size-4 shrink-0 text-[#128C7E]" aria-hidden />
-              WhatsApp {siteConfig.contact.phone}
+              {officialWhatsApp.label} {officialWhatsApp.display}
             </a>
           </div>
         </div>

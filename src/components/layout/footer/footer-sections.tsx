@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, Instagram, Linkedin, Mail, Phone, Twitter } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, MessageCircle, Twitter } from "lucide-react";
 import Link from "next/link";
 
 import { FooterColumn } from "@/components/layout/footer/footer-column";
@@ -20,9 +20,23 @@ export function FooterContact() {
 
   return (
     <FooterColumn title="Contacto">
-      <FooterLink href={contact.phone.href} className="inline-flex items-center gap-2.5">
-        <Phone className="text-primary h-4 w-4 shrink-0" aria-hidden />
-        <span>{contact.phone.label}</span>
+      <FooterLink
+        href={contact.whatsappOfficial.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2.5"
+      >
+        <MessageCircle className="text-primary h-4 w-4 shrink-0" aria-hidden />
+        <span>{contact.whatsappOfficial.label}</span>
+      </FooterLink>
+      <FooterLink
+        href={contact.whatsappSales.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2.5"
+      >
+        <MessageCircle className="text-primary h-4 w-4 shrink-0" aria-hidden />
+        <span>{contact.whatsappSales.label}</span>
       </FooterLink>
       <FooterLink href={contact.email.href} className="inline-flex items-center gap-2.5">
         <Mail className="text-primary h-4 w-4 shrink-0" aria-hidden />
